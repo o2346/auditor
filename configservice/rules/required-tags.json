@@ -1,0 +1,46 @@
+{
+  "icon_emoji": ":warning:",
+  "text": ":warning: *Non-compliant entitiy found* - Configservice Aggregated Violation Detection",
+  "attachments": [ {
+    "fallback": "",
+    "color": "warning",
+    "pretext": "Following entity has been marked as non-compliant against rule defined by the organization's compliance team",
+    "fields": [
+      {
+        "title": "resource marked as non-compliant",
+        "value": "[ARN]",
+        "short": "false"
+      },
+      {
+        "title": "absent tag",
+        "value": "[TAG]",
+        "short": "true"
+      },
+      {
+        "title": "service/function",
+        "value": "required-tags - AWS Config Managed rule",
+        "short": "true"
+      },
+      {
+        "title": "rule description",
+        "value": "Such a resource type is supposed to be assosiated with <https://ap-northeast-1.console.aws.amazon.com/config/home?region=ap-northeast-1&awsc-custsat-override=promptUser#/rules/rule-details/required-tags|predefined tags>",
+        "short": "false"
+      },
+      {
+        "title": "remediation",
+        "value": "Assosiate absent tag properly",
+        "short": "false"
+      }
+    ],
+    "props": {
+      "rvd": {
+        "configservice": {
+          "rule": {
+            "identifier": "REQUIRED_TAGS",
+            "is-managed": "true"
+          }
+        }
+      }
+    }
+  } ]
+}
