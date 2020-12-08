@@ -1,0 +1,20 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Authorize an external account which could be considered as a compliance account and owns an aggregator of AWS Config
+
+Parameters:
+  ComplianceAccount:
+    Description: an account where the compliance status supposed to be forwarded
+    Type: String
+    Default: 999999999999
+  AggregatorRegion:
+    Type: String
+    Default: us-east-1
+    Description: AWS region of the aggregator
+
+Resources:
+  #https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-config-aggregationauthorization.html
+  Authorization:
+    Type: AWS::Config::AggregationAuthorization
+    Properties: 
+      AuthorizedAccountId: !Ref ComplianceAccount
+      AuthorizedAwsRegion: !Ref AggregatorRegion
