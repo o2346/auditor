@@ -11,5 +11,14 @@ response = client.get_aggregate_compliance_details_by_config_rule(
 
 print(response)
 
+response = client.select_aggregate_resource_config(
+    Expression="SELECT configuration \
+                WHERE \
+                  configuration.configRuleList.complianceType = 'NON_COMPLIANT' \
+                  AND configuration.configRuleList.configRuleName = 'required-tags'",
+    ConfigurationAggregatorName='ConfigurationAggregator',
+)
+#https://docs.aws.amazon.com/config/latest/developerguide/querying-AWS-resources.html
 
+print(response)
 
