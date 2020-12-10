@@ -1,4 +1,5 @@
 import boto3
+import json
 client = boto3.client('config')
 
 response = client.get_aggregate_compliance_details_by_config_rule(
@@ -9,7 +10,7 @@ response = client.get_aggregate_compliance_details_by_config_rule(
     ComplianceType='NON_COMPLIANT'
 )
 
-print(response)
+#print(json.dumps(response))
 
 response = client.select_aggregate_resource_config(
     Expression="SELECT configuration \
@@ -20,5 +21,5 @@ response = client.select_aggregate_resource_config(
 )
 #https://docs.aws.amazon.com/config/latest/developerguide/querying-AWS-resources.html
 
-print(response)
-
+for object in response['Results']:
+    print(json.dumps(json.loads(object), indent=2))
