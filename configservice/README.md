@@ -17,7 +17,7 @@ assuming conditions as follows:
 - other technical conditions indicated on parent article
 - a custom script `./cloudformation.sh create-stack-set` is creating stack-instances along with stack-set
 
-To beggin with, define ids and regions which may vary according to your env like below
+To begin with, define ids and regions which may vary according to your env like below
 
 ```
 compliance_accountid='12_DIGITS_ACCOUNT_ID_OF_YOURS'
