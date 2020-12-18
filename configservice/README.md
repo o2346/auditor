@@ -31,10 +31,10 @@ Thereafter issue following commands.
 
 ```
 ./cloudformation.sh create-stack-set --stack-set-name ConfigServiceAggregator \
-  --description "an instance of Configservice Aggregator" \
-  --template-body "file://aggregator.yml" \
+  --description "an instance of Configservice Aggregator"                     \
+  --template-body "file://aggregator.yml"                                     \
   --parameters '[{"ParameterKey":"SourceAccounts","ParameterValue":"'`cat /tmp/accounts.csv`'"}]' \
-  --deployment-targets "Accounts=$compliance_accountid" \
+  --deployment-targets "Accounts=$compliance_accountid"                       \
   --regions "us-east-1"
 ```
 
@@ -61,14 +61,14 @@ Select 'Aggregated view' on the left pane and review what's up.
 
 ```
 ./cloudformation.sh create-stack-set --stack-set-name required-tags \
-  --description "AWS Config managed rule required-tags" \
-  --template-body "file:///tmp/required-tags-for-stackset.json" \
+  --description "AWS Config managed rule required-tags"             \
+  --template-body "file://required-tags-for-stackset.json"     \
   --parameters '[{"ParameterKey":"LambdaAccountId","ParameterValue":"'$compliance_accountid'"}]' \
-  --deployment-targets "OrganizationalUnitIds=$ouid" \
+  --deployment-targets "OrganizationalUnitIds=$ouid"                \
   --regions "$regions"
 ```
 
-- Assuming a Cloudformation template /tmp/required-tags-for-stackset.json is already present
-  - you may generate one by [rdk](https://github.com/awslabs/aws-config-rdk)
+- you may generate such CloudFormation template by [rdk](https://github.com/awslabs/aws-config-rdk)
+
 - This can be done even before establishing the aggregation since it is merely a rule deployment for individuals
 - As you know, Config rules to be deployed even in this procedure does not have to be limited to 'required-tags'. You may try some others as you wish. Good luck.

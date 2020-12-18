@@ -1,0 +1,78 @@
+{
+  "Metadata": {
+    "AWS::CloudFormation::Interface": {
+      "ParameterGroups": [
+        {
+          "Parameters": [
+            "LambdaAccountId"
+          ],
+          "Label": {
+            "default": "Lambda Account ID"
+          }
+        },
+        {
+          "Parameters": [
+            "requiredtagstag1Key"
+          ],
+          "Label": {
+            "default": "Required"
+          }
+        },
+        {
+          "Parameters": [],
+          "Label": {
+            "default": "Optional"
+          }
+        }
+      ],
+      "ParameterLabels": {
+        "LambdaAccountId": {
+          "default": "REQUIRED: Account ID that contains Lambda Function(s) that back the Rules in this template."
+        }
+      }
+    }
+  },
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "AWS CloudFormation template to create custom AWS Config rules. You will be billed for the AWS resources used if you create a stack from this template.",
+  "Conditions": {},
+  "Parameters": {
+    "requiredtagstag1Key": {
+      "Type": "String",
+      "ConstraintDescription": "This parameter is required.",
+      "Description": "Pass-through to required Input Parameter tag1Key for Config Rule required-tags",
+      "Default": "mycompany:is-sensitive",
+      "MinLength": 1
+    },
+    "LambdaAccountId": {
+      "Type": "String",
+      "MaxLength": "12",
+      "Description": "Account ID that contains Lambda functions for Config Rules.",
+      "MinLength": "12"
+    }
+  },
+  "Resources": {
+    "requiredtagsConfigRule": {
+      "Type": "AWS::Config::ConfigRule",
+      "Properties": {
+        "ConfigRuleName": "required-tags",
+        "Description": "required-tags",
+        "Source": {
+          "SourceIdentifier": "REQUIRED_TAGS",
+          "Owner": "AWS"
+        },
+        "Scope": {
+          "ComplianceResourceTypes": [
+            "AWS::EC2::Instance",
+            "AWS::RDS::DBInstance",
+            "AWS::DynamoDB::Table"
+          ]
+        },
+        "InputParameters": {
+          "tag1Key": {
+            "Ref": "requiredtagstag1Key"
+          }
+        }
+      }
+    }
+  }
+}
