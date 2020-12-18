@@ -1,6 +1,6 @@
 # helper elements for AWS Config
 
-This is a part of explanation for [this parent article](https://qiita.com/o2346/fd4175335fd78418d9c9) 
+This is a part of explanation for [this parent article](https://qiita.com/o2346/fd4175335fd78418d9c9)  
 Besides, this is an excersize from my interest and designed to prove such tasks can be applied in the way below, instead of sticking around on Management Console.
 
 ## usage example to deploy a managed rule 'required-tags' across organizations along with aggregation feature, by CloudFormation StackSets in CLI
