@@ -84,7 +84,7 @@ function await_completion() {
   local statusis=`mktemp`
   trap "[ -f $statusis ] && rm $statusis" ERR EXIT
   seq 0 10 | xargs -I{} echo "2^{}-1" | bc | while read standby; do
-    sleep "`shuf -i 0-$standby -n 1`"
+    sleep "`shuf -i 0-$standby -n 1`" #https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/
 
     aws cloudformation list-stack-set-operations --stack-set-name $1 \
       --query 'Summaries[?Status==`RUNNING`]' \
