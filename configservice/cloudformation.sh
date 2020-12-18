@@ -127,20 +127,20 @@ if [ "$1" = "trust-stack-set-administrator" ]; then
 fi
 
 if echo $1 | grep 'delete\-stack\-instances'; then
-  aws cloudformation delete-stack-instances \
-    --stack-set-name $stack_set_name \
+  aws cloudformation delete-stack-instances    \
+    --stack-set-name $stack_set_name           \
     --deployment-targets "$deployment_targets" \
-    --no-retain-stacks \
+    --no-retain-stacks                         \
     --regions $regions
   await_completion $stack_set_name
   exit 0
 fi
 
 if echo $1 | grep 'delete\-stack\-set'; then
-  aws cloudformation delete-stack-instances \
-    --stack-set-name $stack_set_name \
+  aws cloudformation delete-stack-instances    \
+    --stack-set-name $stack_set_name           \
     --deployment-targets "$deployment_targets" \
-    --no-retain-stacks \
+    --no-retain-stacks                         \
     --regions $regions
 
   await_completion $stack_set_name
@@ -153,12 +153,12 @@ fi
 
 if [ "$1" = "create-stack-set" ] ; then
   echo 'creating new one' >&2
-  aws cloudformation create-stack-set                                      \
-    --stack-set-name $stack_set_name                                       \
-    --description "$description"                                           \
-    --template-body "$template_body"                                       \
-    --capabilities CAPABILITY_NAMED_IAM                                    \
-    --permission-model $permission_model                                   \
+  aws cloudformation create-stack-set                           \
+    --stack-set-name $stack_set_name                            \
+    --description "$description"                                \
+    --template-body "$template_body"                            \
+    --capabilities CAPABILITY_NAMED_IAM                         \
+    --permission-model $permission_model                        \
     $auto_deployment_option                                     \
     --parameters "$parameters"
 #    [--administration-role-arn <value>]
@@ -169,14 +169,14 @@ fi
 
 if [ "$1" = "update-stack-set" ] ; then
   echo "updating" >&2
-  aws cloudformation update-stack-set                                      \
-    --stack-set-name $stack_set_name                                       \
-    --description "$description"                                           \
-    --template-body "$template_body"                                \
-    --capabilities CAPABILITY_NAMED_IAM                                    \
-    --permission-model  $permission_model                                  \
-    $auto_deployment_option                                     \
-    --operation-preferences $operation_pref                                \
+  aws cloudformation update-stack-set             \
+    --stack-set-name $stack_set_name              \
+    --description "$description"                  \
+    --template-body "$template_body"              \
+    --capabilities CAPABILITY_NAMED_IAM           \
+    --permission-model  $permission_model         \
+    $auto_deployment_option                       \
+    --operation-preferences $operation_pref       \
     --parameters "$parameters"
 
   await_completion $stack_set_name
@@ -184,18 +184,18 @@ fi
 
 if echo "$1" | grep -E 'update' > /dev/null; then
   echo 'updating stack-instances' >&2
-  aws cloudformation update-stack-instances \
-    --stack-set-name $stack_set_name \
+  aws cloudformation update-stack-instances    \
+    --stack-set-name $stack_set_name           \
     --deployment-targets "$deployment_targets" \
-    --operation-preferences $operation_pref \
+    --operation-preferences $operation_pref    \
     --regions $regions
 
 elif echo "$1" | grep -E 'create' > /dev/null; then
   echo 'creating new stack-instances' >&2
-  aws cloudformation create-stack-instances \
-    --stack-set-name $stack_set_name \
+  aws cloudformation create-stack-instances    \
+    --stack-set-name $stack_set_name           \
     --deployment-targets "$deployment_targets" \
-    --operation-preferences $operation_pref \
+    --operation-preferences $operation_pref    \
     --regions $regions
 
 fi
@@ -209,7 +209,7 @@ if echo "$1" | grep -E '(update|detect-stack-set-drift)' > /dev/null; then
 fi
 
 #describe & list
-aws cloudformation describe-stack-set \
+aws cloudformation describe-stack-set      \
   --stack-set-name $stack_set_name         \
   --query 'StackSet.{Status:Status,StackSetARN:StackSetARN}'
 aws cloudformation list-stack-instances --stack-set-name $stack_set_name
