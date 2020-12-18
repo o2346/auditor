@@ -58,7 +58,7 @@ Thus Compliance-Satellite relationships are supposed to be established.
 In case of completion, visit Management Console of the Compliance accunt, navigate to AWS Config in us-east-1.
 Select 'Aggregated view' on the left pane and review what's up.
 
-### (Optional)Deploy a rule 'required-tags' to the Satellite accounts(which resides on $ouid)
+### Deploy a rule 'required-tags' to the Satellite accounts(which resides on $ouid)
 
 ```
 ./cloudformation.sh create-stack-set --stack-set-name required-tags \
@@ -70,5 +70,5 @@ Select 'Aggregated view' on the left pane and review what's up.
 ```
 
 - you may generate such CloudFormation template by [rdk](https://github.com/awslabs/aws-config-rdk)
-- This can be done even before establishing the aggregation since it is merely a rule deployment for individuals
+- This can be done separately from aggregation establishment
 - As you know, Config rules to be deployed even in this procedure does not have to be limited to 'required-tags'. You may try some others as you wish. Good luck.
