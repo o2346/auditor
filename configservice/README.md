@@ -1,9 +1,9 @@
 # helper elements for AWS Config
 
-This is a part of explanation for [this parent article](https://qiita.com/o2346/fd4175335fd78418d9c9)
+This is a part of explanation for [this parent article](https://qiita.com/o2346/fd4175335fd78418d9c9) 
 Besides, this is an excersize from my interest and designed to prove such tasks can be applied in the way below, instead of sticking around on Management Console.
 
-## usage example to deploy a managed rule 'required-tags' across organizations along with aggregation feture, by CloudFormation StackSets in CLI
+## usage example to deploy a managed rule 'required-tags' across organizations along with aggregation feature, by CloudFormation StackSets in CLI
 
 assuming conditions as follows:
 - an account considered to be compliance account is one of member accounts of same organization
@@ -15,6 +15,7 @@ assuming conditions as follows:
 - most of the commands for CloudFormation will be executed with permission_model=SERVICE_MANAGED
   - but there is an exeption(1)
 - other technical conditions indicated on parent article
+- a custom script `./cloudformation.sh create-stack-set` is creating stack-instances along with stack-set
 
 To beggin with, define ids and regions which may vary according to your env like below
 
@@ -53,7 +54,7 @@ In this case permission model will be switched to SELF_MANAGED(in the source of 
   --regions "$regions"
 ```
 
-Thus Conpliance-Satellite relationships are supposed to be established. 
+Thus Compliance-Satellite relationships are supposed to be established. 
 In case of completion, visit Management Console of the Compliance accunt, navigate to AWS Config in us-east-1.
 Select 'Aggregated view' on the left pane and review what's up.
 
@@ -69,6 +70,5 @@ Select 'Aggregated view' on the left pane and review what's up.
 ```
 
 - you may generate such CloudFormation template by [rdk](https://github.com/awslabs/aws-config-rdk)
-
 - This can be done even before establishing the aggregation since it is merely a rule deployment for individuals
 - As you know, Config rules to be deployed even in this procedure does not have to be limited to 'required-tags'. You may try some others as you wish. Good luck.
