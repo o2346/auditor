@@ -6,18 +6,17 @@ Besides, this is an excersize from my interest and designed to prove such tasks 
 ## usage example to deploy a managed rule 'required-tags' across organizations along with aggregation feture, by CloudFormation StackSets in CLI
 
 assuming conditions as follows:
-- an account considered to be compliance account is one of member accounts of organization
+- an account considered to be compliance account is one of member accounts of same organization
 - an aggregator of the compliance account is going to reside on us-east-1
 - source accounts are supposed to reside in an ou $ouid
-  - also /tmp/accounts.csv is already present
-    - and the file contains the same accounts properly
-- A Cloudformation template /tmp/required-tags-for-stackset.json is already present
-  - you may generate one by [rdk](https://github.com/awslabs/aws-config-rdk)
-- regions to deploy the Config rule as well as Aggregation Authorizations are $regions in comma separated
-- most of the commands for CloudFormation will be executed with permission_model=SERVICE_MANAGED but there is an exeption
+- /tmp/accounts.csv is already present
+  -  contains the same source accounts
+- regions to deploy the Config rule as well as Aggregation Authorizations are `$regions` in comma separated
+- most of the commands for CloudFormation will be executed with permission_model=SERVICE_MANAGED
+  - but there is an exeption(1)
 - other technical conditions indicated on parent article
 
-in the begging, define ids and regions which may vary according to your env like below
+To beggin with, define ids and regions which may vary according to your env like below
 
 ```
 compliance_accountid='12_DIGITS_ACCOUNT_ID_OF_YOURS'
@@ -25,8 +24,10 @@ ouid='OUID_WHICH_CONTAINS_TARGET_SOURCE_ACCOUNTS'
 regions="us-east-1,ap-northeast-1"
 ```
 
-Obtain credentials of the Organizations master account in order to create-stack-set.
-Thereafter issue following commands sequentially
+Obtain credentials of the **Organizations master account** in order to create-stack-set. 
+Thereafter issue following commands.
+
+### Create Aggregator on Compliance account
 
 ```
 ./cloudformation.sh create-stack-set --stack-set-name ConfigServiceAggregator \
@@ -37,11 +38,11 @@ Thereafter issue following commands sequentially
   --regions "us-east-1"
 ```
 
-note: Beware deployment-targets of the command above is an account(instead of ou) considered to be a compliance account.
+note: Beware deployment-targets of the command above is an account instead of ou.
 Meaning proper [Grant self-managed permissions](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/stacksets-prereqs-self-managed.html) between the one and Organizations master account is required to make this command successful.
-In this case permission model will be switched to SELF_MANAGED(see the source of ./cloudformation.sh). This is the exception indicated before.
+In this case permission model will be switched to SELF_MANAGED(in the source of ./cloudformation.sh). This is the exception indicated before(1).
 
-those two below are for source accounts in $ouid
+### Let Satellite accounts to admit Compliance account
 
 ```
 ./cloudformation.sh create-stack-set --stack-set-name ConfigServiceAggregationAuthorizations \
@@ -52,6 +53,12 @@ those two below are for source accounts in $ouid
   --regions "$regions"
 ```
 
+Thus Conpliance-Satellite relationships are supposed to be established. 
+In case of completion, visit Management Console of the Compliance accunt, navigate to AWS Config in us-east-1.
+Select 'Aggregated view' on the left pane and review what's up.
+
+### (Optional)Deploy a rule 'required-tags' to the Satellite accounts(which resides on $ouid)
+
 ```
 ./cloudformation.sh create-stack-set --stack-set-name required-tags \
   --description "AWS Config managed rule required-tags" \
@@ -61,10 +68,7 @@ those two below are for source accounts in $ouid
   --regions "$regions"
 ```
 
-after completion, visit Management Console of the compliance accunt, navigate to AWS Config in us-east-1.
-Select 'Aggregated view' on the left pane and review what's up.
-Or else same way through CLI or other api as you prefer.
-
-## misc
-
-As you know, Config rules to be deployed even in this procedure does not have to be limited to 'required-tags'. You may try some others in case of your interest. Good luck.
+- Assuming a Cloudformation template /tmp/required-tags-for-stackset.json is already present
+  - you may generate one by [rdk](https://github.com/awslabs/aws-config-rdk)
+- This can be done even before establishing the aggregation since it is merely a rule deployment for individuals
+- As you know, Config rules to be deployed even in this procedure does not have to be limited to 'required-tags'. You may try some others as you wish. Good luck.
