@@ -8,13 +8,14 @@ Besides, this is an excersize from my interest and designed to prove such tasks 
 assuming conditions as follows:
 - an account considered to be compliance account is one of member accounts of same organization
 - an aggregator of the compliance account is going to reside on us-east-1
-- source accounts are supposed to reside in an ou $ouid
+- AWS Config is already enabled in the Source accounts
+- Source accounts are supposed to reside in an ou $ouid
+  - 'Source accounts' may also represent Satellite accounts
 - /tmp/accounts.csv is already present
   -  contains the same source accounts
 - regions to deploy the Config rule as well as Aggregation Authorizations are `$regions` in comma separated
 - most of the commands for CloudFormation will be executed with permission_model=SERVICE_MANAGED
   - but there is an exeption(1)
-- other technical conditions indicated on parent article
 - a custom script `./cloudformation.sh create-stack-set` is creating stack-instances along with stack-set
 
 To begin with, define ids and regions which may vary according to your env like below
@@ -43,7 +44,7 @@ note: Beware deployment-targets of the command above is an account instead of ou
 Meaning proper [Grant self-managed permissions](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/stacksets-prereqs-self-managed.html) between the one and Organizations master account is required to make this command successful.
 In this case permission model will be switched to SELF_MANAGED(in the source of ./cloudformation.sh). This is the exception indicated before(1).
 
-### Let Satellite accounts to admit Compliance account
+### Let Source accounts to admit Compliance account
 
 ```
 ./cloudformation.sh create-stack-set --stack-set-name ConfigServiceAggregationAuthorizations \
@@ -54,11 +55,11 @@ In this case permission model will be switched to SELF_MANAGED(in the source of 
   --regions "$regions"
 ```
 
-Thus Compliance-Satellite relationships are supposed to be established. 
+Thus Compliance-Source relationships are supposed to be established. 
 In case of completion, visit Management Console of the Compliance accunt, navigate to AWS Config in us-east-1.
 Select 'Aggregated view' on the left pane and review what's up.
 
-### Deploy a rule 'required-tags' to the Satellite accounts(which resides on $ouid)
+### Deploy a rule 'required-tags' to the Source accounts(which resides on $ouid)
 
 ```
 ./cloudformation.sh create-stack-set --stack-set-name required-tags \
