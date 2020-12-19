@@ -10,13 +10,14 @@ assuming conditions as follows:
 - an aggregator of the compliance account is going to reside on us-east-1
 - AWS Config is already enabled in the Source accounts
 - Source accounts are supposed to reside in an ou $ouid
-  - 'Source accounts' may also represent Satellite accounts
 - /tmp/accounts.csv is already present
   -  contains the same source accounts
-- regions to deploy the Config rule as well as Aggregation Authorizations are `$regions` in comma separated
+- 'Source accounts' may also represent Satellite accounts
+- `$regions` are where to deploy the Config rule as well as Aggregation Authorizations on the Source accounts
+- `$regions` must defined in comma separated
 - most of the commands for CloudFormation will be executed with permission_model=SERVICE_MANAGED
   - but there is an exeption(1)
-- a custom script `./cloudformation.sh create-stack-set` is creating stack-instances along with stack-set
+- a custom script `./cloudformation.sh create-stack-set` is creating stack-instances along with stack-set for handy
 
 To begin with, define ids and regions which may vary according to your env like below
 
