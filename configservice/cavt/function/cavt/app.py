@@ -5,6 +5,10 @@ from schema.aws.events.scheduledjson import ScheduledEvent
 import json
 import os
 
+import urllib3 
+import json
+http = urllib3.PoolManager() 
+
 def lambda_handler(event, context):
     """Sample Lambda function reacting to EventBridge events
 
@@ -34,6 +38,12 @@ def lambda_handler(event, context):
     #https://stackoverflow.com/a/39550486
     with open(os.environ['LAMBDA_TASK_ROOT'] + "/cavt/slack-message-template-required-tags.json") as json_file:
         data = json.load(json_file)
+
+    url = "https://hooks.slack.com/services/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+    msg = data
+    encoded_msg = json.dumps(msg).encode('utf-8')
+    resp = http.request('POST',url, body=encoded_msg)
+    #resptxt = json.dumps(resp)
 
     #Make updates to event payload, if desired
     awsEvent.detail_type = "HelloWorldFunction updated event of " + awsEvent.detail_type + json.dumps(data);
