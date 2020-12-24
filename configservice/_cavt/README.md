@@ -28,3 +28,5 @@ Make sure an aggregator is ready on the Compliance account. A sample way to set 
 ## Confirmation
 
 Check the Slack channel that defined by yourself
+
+<!---configservice-aggregated-violation-transmitter--->
