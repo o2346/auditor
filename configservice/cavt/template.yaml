@@ -37,3 +37,6 @@ Outputs:
   FunctionIamRole:
     Description: "Implicit IAM Role created for the function"
     Value: !GetAtt FunctionRole.Arn
+
+#misc
+#https://docs.aws.amazon.com/lambda/latest/dg/with-scheduledevents-example-use-app-spec.html

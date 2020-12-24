@@ -5,6 +5,8 @@ from schema.aws.events.scheduledjson import ScheduledEvent
 import json
 import os
 
+#https://aws.amazon.com/premiumsupport/knowledge-center/sns-lambda-webhooks-chime-slack-teams/
+#https://docs.aws.amazon.com/lambda/latest/dg/services-cloudwatchevents.html
 import urllib3 
 import json
 http = urllib3.PoolManager() 
@@ -34,10 +36,17 @@ def lambda_handler(event, context):
     detail:ScheduledEvent = awsEvent.detail
 
     #Execute business logic
+    #https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/config.html#ConfigService.Client.select_aggregate_resource_config
+    #https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/config.html#ConfigService.Client.get_aggregate_compliance_details_by_config_rule
 
     #https://stackoverflow.com/a/39550486
     with open(os.environ['LAMBDA_TASK_ROOT'] + "/cavt/slack-message-template-required-tags.json") as json_file:
         data = json.load(json_file)
+        #https://api.slack.com/messaging/webhooks
+        #https://developers.mattermost.com/integrate/incoming-webhooks/
+        #http://ykng0.hatenablog.com/entry/2016/12/25/225424
+        #https://gist.github.com/rantav/c096294f6f35c45155b4
+        #https://slack.dev/python-slackclient/basic_usage.html
 
     url = "https://hooks.slack.com/services/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
     msg = data
