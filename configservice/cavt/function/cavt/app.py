@@ -11,6 +11,9 @@ import urllib3
 import json
 http = urllib3.PoolManager() 
 
+import boto3
+client = boto3.client('config')
+
 def lambda_handler(event, context):
     """Sample Lambda function reacting to EventBridge events
 
@@ -38,7 +41,13 @@ def lambda_handler(event, context):
     #Execute business logic
     #https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/config.html#ConfigService.Client.select_aggregate_resource_config
     #https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/config.html#ConfigService.Client.get_aggregate_compliance_details_by_config_rule
-
+    response = client.get_aggregate_compliance_details_by_config_rule(
+        ConfigurationAggregatorName='ConfigurationAggregator',
+        ConfigRuleName='required-tags',
+        AccountId='NNNNNNNNNNNN',
+        AwsRegion='us-east-1',
+        ComplianceType='NON_COMPLIANT'
+    )
     #https://stackoverflow.com/a/39550486
     with open(os.environ['LAMBDA_TASK_ROOT'] + "/cavt/slack-message-template-required-tags.json") as json_file:
         data = json.load(json_file)
@@ -58,7 +67,7 @@ def lambda_handler(event, context):
 
     #Make updates to event payload, if desired
     #awsEvent.detail_type = "HelloWorldFunction updated event of " + awsEvent.detail_type + str(os.environ['SENDTO']);
-    awsEvent.detail_type = str(resp)
+    awsEvent.detail_type = str(response)
 
     #Return event for further processing
     return Marshaller.marshall(awsEvent)
