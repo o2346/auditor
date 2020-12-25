@@ -17,6 +17,7 @@ client = boto3.client('config')
 import glob
 
 def audit(context):
+    result = []
     with open(context) as json_file:
         data = json.load(json_file)
         #https://api.slack.com/messaging/webhooks
@@ -42,7 +43,8 @@ def audit(context):
         #NextToken='string'
     )
     #https://stackoverflow.com/a/39550486
-    return data
+    #result.append(data)
+    return result
 
 
 def lambda_handler(event, context):
@@ -79,13 +81,21 @@ def lambda_handler(event, context):
     #    AwsRegion='us-east-1',
     #    ComplianceType='NON_COMPLIANT'
     #)
+    url = os.environ['SENDTO']
     nonconpliants = {}
     for (filename) in glob.glob(str(os.environ['LAMBDA_TASK_ROOT'] + "/cavt/rules/*.json")):
-        nonconpliants[filename]=audit(filename)
+        audited = audit(filename)
+        if len(audited) == 0:
+            continue
+
+        nonconpliants[filename]=audited
+        for idx, val in enumerate(nonconpliants[filename]):
+            encoded_msg = json.dumps(val).encode('utf-8')
+            val['http_send_response'] = http.request('POST',url, body=encoded_msg)
+        #nonconpliants[filename]['http_send_response'] = 'mocresponce'
 
     #usage example:
     #sam build && sam local invoke --parameter-overrides SendTo=YOUR_WEBHOOK_URL
-    url = os.environ['SENDTO']
     #msg = audit('hoge')
     #encoded_msg = json.dumps(msg).encode('utf-8')
     #resp = http.request('POST',url, body=encoded_msg)
@@ -95,7 +105,7 @@ def lambda_handler(event, context):
     #awsEvent.detail_type = "HelloWorldFunction updated event of " + awsEvent.detail_type + str(os.environ['SENDTO']);
     #awsEvent.detail_type = msg
     #awsEvent.detail_type = nonconpliants
-    awsEvent.detail_type = nonconpliants
+    awsEvent.detail_type = str(nonconpliants)
     #awsEvent.detail_type = json.dumps(response, indent=2)
 
     #Return event for further processing
