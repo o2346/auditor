@@ -41,12 +41,28 @@ def lambda_handler(event, context):
     #Execute business logic
     #https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/config.html#ConfigService.Client.select_aggregate_resource_config
     #https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/config.html#ConfigService.Client.get_aggregate_compliance_details_by_config_rule
-    response = client.get_aggregate_compliance_details_by_config_rule(
+    #response = client.get_aggregate_compliance_details_by_config_rule(
+    #    ConfigurationAggregatorName='ConfigurationAggregator',
+    #    ConfigRuleName='required-tags',
+    #    AccountId='NNNNNNNNNNNN',
+    #    AwsRegion='us-east-1',
+    #    ComplianceType='NON_COMPLIANT'
+    #)
+
+    response = client.select_aggregate_resource_config(
+        Expression='''
+            SELECT
+              configuration.targetResourceId,
+              configuration.targetResourceType,
+              configuration.complianceType,
+              configuration.configRuleList
+            WHERE
+              configuration.complianceType = 'NON_COMPLIANT'
+        ''',
         ConfigurationAggregatorName='ConfigurationAggregator',
-        ConfigRuleName='required-tags',
-        AccountId='NNNNNNNNNNNN',
-        AwsRegion='us-east-1',
-        ComplianceType='NON_COMPLIANT'
+        #Limit=123,
+        #MaxResults=123,
+        #NextToken='string'
     )
     #https://stackoverflow.com/a/39550486
     with open(os.environ['LAMBDA_TASK_ROOT'] + "/cavt/slack-message-template-required-tags.json") as json_file:
@@ -67,7 +83,7 @@ def lambda_handler(event, context):
 
     #Make updates to event payload, if desired
     #awsEvent.detail_type = "HelloWorldFunction updated event of " + awsEvent.detail_type + str(os.environ['SENDTO']);
-    awsEvent.detail_type = str(response)
+    awsEvent.detail_type = json.dumps(response, indent=2)
 
     #Return event for further processing
     return Marshaller.marshall(awsEvent)
