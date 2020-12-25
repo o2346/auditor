@@ -1,10 +1,10 @@
 {
   "icon_emoji": ":warning:",
-  "text": ":warning: *Non-compliant entitiy found* - Configservice Aggregated Violation Detection",
+  "text": ":warning: *Non-compliant found* - Configservice Aggregated Violation Transmitter",
   "attachments": [ {
     "fallback": "",
     "color": "warning",
-    "pretext": "Following entity has been marked as non-compliant against rule defined by the organization's compliance team",
+    "pretext": "Following has been marked as non-compliant against rule defined by the organization's compliance team",
     "fields": [
       {
         "title": "account id",
@@ -32,14 +32,13 @@
         "short": "true"
       },
       {
-        "title": "rule description",
-        "value": "Such a resource type is supposed to be assosiated with predefined tans",
-        "short": "false"
+        "title": "remediation",
+        "value": "Associate absent tag to the resource properly",
+        "short": "true"
       },
       {
-        "title": "remediation",
-        "value": "Assosiate absent tag properly",
-        "short": "false"
+        "title": "rule description",
+        "value": "Such a resource type is supposed to be associated with predefined tags. Visit <https://awsRegion.console.aws.amazon.com/config/home?region=awsRegion&awsc-custsat-override=promptUser#/rules/rule-details/required-tags|required-tags> or else ask your compliance team for details"
       }
     ],
     "props": {
