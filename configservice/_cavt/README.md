@@ -23,7 +23,9 @@ Make sure an aggregator is ready on the Compliance account. A sample way to set 
 
 ## Deploy
 
-`sam deploy --parameter-overrides SendTo=https://hooks.slack.com/services/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX`
+```
+sam deploy --parameter-overrides SendTo=https://hooks.slack.com/services/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX --resolve-s3
+```
 
 ## local
 
@@ -46,4 +48,4 @@ on another terminal, review output by following:
 
 Check the Slack channel that defined by yourself
 
-<!---configservice-aggregated-violation-transmitter--->
+<!-- configservice-aggregated-violation-transmitter -->
