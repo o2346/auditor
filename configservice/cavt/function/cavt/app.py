@@ -48,7 +48,9 @@ def lambda_handler(event, context):
         #https://gist.github.com/rantav/c096294f6f35c45155b4
         #https://slack.dev/python-slackclient/basic_usage.html
 
-    url = "https://hooks.slack.com/services/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+    #usage example:
+    #sam build && sam local invoke --parameter-overrides SendTo=YOUR_WEBHOOK_URL
+    url = os.environ['SENDTO']
     msg = data
     encoded_msg = json.dumps(msg).encode('utf-8')
     resp = http.request('POST',url, body=encoded_msg)
@@ -56,7 +58,7 @@ def lambda_handler(event, context):
 
     #Make updates to event payload, if desired
     #awsEvent.detail_type = "HelloWorldFunction updated event of " + awsEvent.detail_type + str(os.environ['SENDTO']);
-    awsEvent.detail_type = str(os.environ['SENDTO']);
+    awsEvent.detail_type = str(resp)
 
     #Return event for further processing
     return Marshaller.marshall(awsEvent)
