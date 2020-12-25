@@ -16,9 +16,12 @@ client = boto3.client('config')
 
 import glob
 
+import functools
+import re
+
 def audit(context):
     result = []
-    with open(context) as json_file:
+    with open(context, 'r') as json_file:
         data = json.load(json_file)
         #https://api.slack.com/messaging/webhooks
         #https://developers.mattermost.com/integrate/incoming-webhooks/
@@ -26,10 +29,21 @@ def audit(context):
         #https://gist.github.com/rantav/c096294f6f35c45155b4
         #https://slack.dev/python-slackclient/basic_usage.html
 
-    print('hoge')
+    print(type(data))
+
+    # initializing list 
+    lis = [ json.dumps(data) , [ 'rule', 'hoge' ], [ 'true','FALSE' ], ]
+
+# using reduce to compute sum of list 
+    print (functools.reduce(lambda a,b :re.sub(b[0], b[1], a) ,lis))
+  
+
     response = client.select_aggregate_resource_config(
+            #https://github.com/awslabs/aws-config-resource-schema/blob/master/config/properties/AWS.properties.json
         Expression='''
             SELECT
+              accountId,
+              awsRegion,
               configuration.targetResourceId,
               configuration.targetResourceType,
               configuration.complianceType,
@@ -43,6 +57,8 @@ def audit(context):
         #MaxResults=123,
         #NextToken='string'
     )
+    for result in response['Results']:
+        print(json.dumps(json.loads(result), indent=2))
     #https://stackoverflow.com/a/39550486
     #result.append(data)
     return result

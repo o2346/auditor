@@ -7,23 +7,28 @@
     "pretext": "Following entity has been marked as non-compliant against rule defined by the organization's compliance team",
     "fields": [
       {
-        "title": "resource marked as non-compliant",
-        "value": "[ARN]",
-        "short": "false"
-      },
-      {
-        "title": "absent tag",
-        "value": "[TAG]",
+        "title": "account id",
+        "value": "accountId",
         "short": "true"
       },
       {
-        "title": "service/function",
-        "value": "required-tags - AWS Config Managed rule",
+        "title": "resource id marked as non-compliant",
+        "value": "configuration.targetResourceId",
+        "short": "true"
+      },
+      {
+        "title": "resource type",
+        "value": "configuration.targetResourceType",
+        "short": "true"
+      },
+      {
+        "title": "rule against",
+        "value": "<https://awsRegion.console.aws.amazon.com/config/home?region=awsRegion&awsc-custsat-override=promptUser#/rules/rule-details/required-tags|required-tags> - AWS Config Managed rule",
         "short": "true"
       },
       {
         "title": "rule description",
-        "value": "Such a resource type is supposed to be assosiated with <https://ap-northeast-1.console.aws.amazon.com/config/home?region=ap-northeast-1&awsc-custsat-override=promptUser#/rules/rule-details/required-tags|predefined tags>",
+        "value": "Such a resource type is supposed to be assosiated with predefined tans",
         "short": "false"
       },
       {
@@ -33,9 +38,10 @@
       }
     ],
     "props": {
-      "rvd": {
+      "rvt": {
         "configservice": {
           "rule": {
+            "configRuleName": "required-tags",
             "identifier": "REQUIRED_TAGS",
             "is-managed": "true"
           }
