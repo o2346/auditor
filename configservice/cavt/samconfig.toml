@@ -3,7 +3,6 @@ version = 0.1
 [default.deploy]
 [default.deploy.parameters]
 stack_name = "configservice-aggregated-violation-transmitter"
-s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-m13kc9ysae75"
 s3_prefix = "configservice-aggregated-violation-transmitter"
 region = "us-east-1"
 confirm_changeset = true
