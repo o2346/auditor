@@ -26,6 +26,7 @@ def audit(context):
         #https://gist.github.com/rantav/c096294f6f35c45155b4
         #https://slack.dev/python-slackclient/basic_usage.html
 
+    print('hoge')
     response = client.select_aggregate_resource_config(
         Expression='''
             SELECT

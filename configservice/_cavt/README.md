@@ -23,7 +23,24 @@ Make sure an aggregator is ready on the Compliance account. A sample way to set 
 
 ## Deploy
 
-`sam deploy`
+`sam deploy --parameter-overrides SendTo=https://hooks.slack.com/services/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX`
+
+## local
+
+```
+sam build && sam local invoke --parameter-overrides SendTo=https://hooks.slack.com/services/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+```
+
+### with debug output
+
+```
+sam build && sam local invoke --parameter-overrides SendTo=https://hooks.slack.com/services/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX --debug -l /tmp/invoke.log
+```
+
+on another terminal, review output by following:
+
+`tail -f /tmp/invoke.log`
+
 
 ## Confirmation
 
