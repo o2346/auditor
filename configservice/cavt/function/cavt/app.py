@@ -14,6 +14,37 @@ http = urllib3.PoolManager()
 import boto3
 client = boto3.client('config')
 
+import glob
+
+def audit(context):
+    with open(context) as json_file:
+        data = json.load(json_file)
+        #https://api.slack.com/messaging/webhooks
+        #https://developers.mattermost.com/integrate/incoming-webhooks/
+        #http://ykng0.hatenablog.com/entry/2016/12/25/225424
+        #https://gist.github.com/rantav/c096294f6f35c45155b4
+        #https://slack.dev/python-slackclient/basic_usage.html
+
+    response = client.select_aggregate_resource_config(
+        Expression='''
+            SELECT
+              configuration.targetResourceId,
+              configuration.targetResourceType,
+              configuration.complianceType,
+              configuration.configRuleList
+            WHERE
+              configuration.complianceType = 'NON_COMPLIANT'
+              AND configuration.configRuleList.configRuleName = 'required-tags'
+        ''',
+        ConfigurationAggregatorName='ConfigurationAggregator',
+        #Limit=123,
+        #MaxResults=123,
+        #NextToken='string'
+    )
+    #https://stackoverflow.com/a/39550486
+    return data
+
+
 def lambda_handler(event, context):
     """Sample Lambda function reacting to EventBridge events
 
@@ -48,43 +79,24 @@ def lambda_handler(event, context):
     #    AwsRegion='us-east-1',
     #    ComplianceType='NON_COMPLIANT'
     #)
-
-    response = client.select_aggregate_resource_config(
-        Expression='''
-            SELECT
-              configuration.targetResourceId,
-              configuration.targetResourceType,
-              configuration.complianceType,
-              configuration.configRuleList
-            WHERE
-              configuration.complianceType = 'NON_COMPLIANT'
-              AND configuration.configRuleList.configRuleName = 'required-tags'
-        ''',
-        ConfigurationAggregatorName='ConfigurationAggregator',
-        #Limit=123,
-        #MaxResults=123,
-        #NextToken='string'
-    )
-    #https://stackoverflow.com/a/39550486
-    with open(os.environ['LAMBDA_TASK_ROOT'] + "/cavt/slack-message-template-required-tags.json") as json_file:
-        data = json.load(json_file)
-        #https://api.slack.com/messaging/webhooks
-        #https://developers.mattermost.com/integrate/incoming-webhooks/
-        #http://ykng0.hatenablog.com/entry/2016/12/25/225424
-        #https://gist.github.com/rantav/c096294f6f35c45155b4
-        #https://slack.dev/python-slackclient/basic_usage.html
+    nonconpliants = {}
+    for (filename) in glob.glob(str(os.environ['LAMBDA_TASK_ROOT'] + "/cavt/rules/*.json")):
+        nonconpliants[filename]=audit(filename)
 
     #usage example:
     #sam build && sam local invoke --parameter-overrides SendTo=YOUR_WEBHOOK_URL
     url = os.environ['SENDTO']
-    msg = data
-    encoded_msg = json.dumps(msg).encode('utf-8')
-    resp = http.request('POST',url, body=encoded_msg)
+    #msg = audit('hoge')
+    #encoded_msg = json.dumps(msg).encode('utf-8')
+    #resp = http.request('POST',url, body=encoded_msg)
     #resptxt = json.dumps(resp)
 
     #Make updates to event payload, if desired
     #awsEvent.detail_type = "HelloWorldFunction updated event of " + awsEvent.detail_type + str(os.environ['SENDTO']);
-    awsEvent.detail_type = json.dumps(response, indent=2)
+    #awsEvent.detail_type = msg
+    #awsEvent.detail_type = nonconpliants
+    awsEvent.detail_type = nonconpliants
+    #awsEvent.detail_type = json.dumps(response, indent=2)
 
     #Return event for further processing
     return Marshaller.marshall(awsEvent)
