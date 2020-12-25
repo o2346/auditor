@@ -33,8 +33,9 @@ def audit(context):
     configRuleName = contextObject['attachments'][0]['props']['rvt']['configservice']['rule']['configRuleName']
     print(configRuleName)
 
+    #https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/config.html#ConfigService.Client.select_aggregate_resource_config
     response = client.select_aggregate_resource_config(
-            #https://github.com/awslabs/aws-config-resource-schema/blob/master/config/properties/AWS.properties.json
+        #https://github.com/awslabs/aws-config-resource-schema/blob/master/config/properties/AWS.properties.json
         Expression='''
             SELECT
               accountId,
