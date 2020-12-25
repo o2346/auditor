@@ -50,7 +50,7 @@ def audit(context):
         ConfigurationAggregatorName='ConfigurationAggregator',
         #Limit=123,
         #MaxResults=123,
-        #NextToken='string'
+        #NextToken='string' #handle this thing, or you would have incomplete results
     )
 
 
