@@ -58,6 +58,7 @@ def lambda_handler(event, context):
               configuration.configRuleList
             WHERE
               configuration.complianceType = 'NON_COMPLIANT'
+              AND configuration.configRuleList.configRuleName = 'required-tags'
         ''',
         ConfigurationAggregatorName='ConfigurationAggregator',
         #Limit=123,
