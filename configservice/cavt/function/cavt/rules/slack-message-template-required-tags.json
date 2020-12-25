@@ -12,6 +12,11 @@
         "short": "true"
       },
       {
+        "title": "region",
+        "value": "awsRegion",
+        "short": "true"
+      },
+      {
         "title": "resource id marked as non-compliant",
         "value": "configuration.targetResourceId",
         "short": "true"

@@ -20,23 +20,18 @@ import functools
 import re
 
 def audit(context):
-    result = []
+    nonconpliants = []
     with open(context, 'r') as json_file:
-        data = json.load(json_file)
+        json_text = json.dumps(json.load(json_file))
         #https://api.slack.com/messaging/webhooks
         #https://developers.mattermost.com/integrate/incoming-webhooks/
         #http://ykng0.hatenablog.com/entry/2016/12/25/225424
         #https://gist.github.com/rantav/c096294f6f35c45155b4
         #https://slack.dev/python-slackclient/basic_usage.html
 
-    print(type(data))
-
-    # initializing list 
-    lis = [ json.dumps(data) , [ 'rule', 'hoge' ], [ 'true','FALSE' ], ]
-
-# using reduce to compute sum of list 
-    print (functools.reduce(lambda a,b :re.sub(b[0], b[1], a) ,lis))
-  
+    contextObject = json.loads(json_text)
+    configRuleName = contextObject['attachments'][0]['props']['rvt']['configservice']['rule']['configRuleName']
+    print(configRuleName)
 
     response = client.select_aggregate_resource_config(
             #https://github.com/awslabs/aws-config-resource-schema/blob/master/config/properties/AWS.properties.json
@@ -50,18 +45,34 @@ def audit(context):
               configuration.configRuleList
             WHERE
               configuration.complianceType = 'NON_COMPLIANT'
-              AND configuration.configRuleList.configRuleName = 'required-tags'
-        ''',
+              AND configuration.configRuleList.configRuleName = '{0}'
+        '''.format(configRuleName),
         ConfigurationAggregatorName='ConfigurationAggregator',
         #Limit=123,
         #MaxResults=123,
         #NextToken='string'
     )
-    for result in response['Results']:
-        print(json.dumps(json.loads(result), indent=2))
+
+
+
+    for resultText in response['Results']:
+        #print(json.dumps(json.loads(result), indent=2))
+        result = json.loads(resultText)
+        # prepare template
+        contextTemplateObject = [
+            json_text,
+            [ 'accountId', result['accountId'] ],
+            [ 'awsRegion', result['awsRegion'] ],
+            [ 'configuration.targetResourceId', result['configuration']['targetResourceId'] ],
+            [ 'configuration.targetResourceType', result['configuration']['targetResourceType'] ],
+            [ 'configuration.complianceType', result['configuration']['complianceType'] ]
+            #[ 'configuration.configRuleList', result['configuration']['configRuleList'] ]
+        ]
+        item = json.loads(functools.reduce(lambda a,b :re.sub(b[0], b[1], a) ,contextTemplateObject))
+        nonconpliants.append(item)
     #https://stackoverflow.com/a/39550486
-    #result.append(data)
-    return result
+    #result.append(json_text)
+    return nonconpliants
 
 
 def lambda_handler(event, context):
