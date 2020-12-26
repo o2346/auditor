@@ -7,9 +7,9 @@ import os
 
 #https://aws.amazon.com/premiumsupport/knowledge-center/sns-lambda-webhooks-chime-slack-teams/
 #https://docs.aws.amazon.com/lambda/latest/dg/services-cloudwatchevents.html
-import urllib3 
+import urllib3
 import json
-http = urllib3.PoolManager() 
+http = urllib3.PoolManager()
 
 import boto3
 client = boto3.client('config')
@@ -118,15 +118,6 @@ def lambda_handler(event, context):
     detail:ScheduledEvent = awsEvent.detail
 
     #Execute business logic
-    #https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/config.html#ConfigService.Client.select_aggregate_resource_config
-    #https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/config.html#ConfigService.Client.get_aggregate_compliance_details_by_config_rule
-    #response = client.get_aggregate_compliance_details_by_config_rule(
-    #    ConfigurationAggregatorName='ConfigurationAggregator',
-    #    ConfigRuleName='required-tags',
-    #    AccountId='NNNNNNNNNNNN',
-    #    AwsRegion='us-east-1',
-    #    ComplianceType='NON_COMPLIANT'
-    #)
     url = os.environ['SENDTO']
     nonconpliants = {}
     for (filename) in glob.glob(str(os.environ['LAMBDA_TASK_ROOT'] + "/cavt/rules/*.json")):
@@ -140,7 +131,6 @@ def lambda_handler(event, context):
             encoded_msg = json.dumps(val).encode('utf-8')
             response = http.request('POST',url, body=encoded_msg)
             val['http_send_response'] = str(response)
-        #nonconpliants[filename]['http_send_response'] = 'mocresponce'
 
     print(json.dumps(nonconpliants, indent=2))
     awsEvent.detail_type = nonconpliants
