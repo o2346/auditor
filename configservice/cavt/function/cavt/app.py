@@ -58,7 +58,7 @@ def audit(context):
     print(configRuleName)
 
     #https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/config.html#ConfigService.Client.select_aggregate_resource_config
-    #Note: you may want to limit number of length for response since enormous violations would have returned
+    #Note: you may want to limit length for the response since enormous number of violations would have returned
     #An idea to restrict the length is here. Absent from handling NextToken and provide argument "Limit=N"
     #response = client.select_aggregate_resource_config(
     response = select_aggregate_resource_config(
