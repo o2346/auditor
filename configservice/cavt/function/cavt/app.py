@@ -63,7 +63,8 @@ def audit(context):
     #response = client.select_aggregate_resource_config(
     response = select_aggregate_resource_config(
         #https://github.com/awslabs/aws-config-resource-schema/blob/master/config/properties/AWS.properties.json
-        Expression='''
+        #https://stackoverflow.com/a/50550283
+        Expression=f'''
             SELECT
               accountId,
               awsRegion,
@@ -73,8 +74,8 @@ def audit(context):
               configuration.configRuleList
             WHERE
               configuration.complianceType = 'NON_COMPLIANT'
-              AND configuration.configRuleList.configRuleName = '{0}'
-        '''.format(configRuleName),
+              AND configuration.configRuleList.configRuleName = '{configRuleName}'
+        ''',
         ConfigurationAggregatorName='ConfigurationAggregator'
         #Limit=20
     )
