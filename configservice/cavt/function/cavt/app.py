@@ -1,3 +1,5 @@
+#configservice aggregated violation transmitter - main function
+
 from schema.aws.events.scheduledjson import Marshaller
 from schema.aws.events.scheduledjson import AWSEvent
 from schema.aws.events.scheduledjson import ScheduledEvent
@@ -42,7 +44,7 @@ def select_aggregate_resource_config(Expression, ConfigurationAggregatorName, Ne
         return select_aggregate_resource_config(Expression, ConfigurationAggregatorName, page.get('NextToken'), current)
 
 def audit(context):
-    nonconpliants = []
+    violations = []
     with open(context, 'r') as json_file:
         json_text = json.dumps(json.load(json_file))
         #https://api.slack.com/messaging/webhooks
@@ -87,10 +89,9 @@ def audit(context):
             #[ 'configuration.configRuleList', result['configuration']['configRuleList'] ]
         ]
         item = json.loads(functools.reduce(lambda a,b :re.sub(b[0], b[1], a) ,contextTemplateObject))
-        nonconpliants.append(item)
+        violations.append(item)
     #https://stackoverflow.com/a/39550486
-    #result.append(json_text)
-    return nonconpliants
+    return violations
 
 
 def lambda_handler(event, context):
@@ -119,21 +120,21 @@ def lambda_handler(event, context):
 
     #Execute business logic
     url = os.environ['SENDTO']
-    nonconpliants = {}
+    violations = {}
     for (filename) in glob.glob(str(os.environ['LAMBDA_TASK_ROOT'] + "/cavt/rules/*.json")):
         audited = audit(filename)
         if len(audited) == 0:
             continue
 
         rule_context_name = os.path.splitext(os.path.basename(filename))[0]
-        nonconpliants[rule_context_name]=audited
-        for idx, val in enumerate(nonconpliants[rule_context_name]):
+        violations[rule_context_name]=audited
+        for idx, val in enumerate(violations[rule_context_name]):
             encoded_msg = json.dumps(val).encode('utf-8')
             response = http.request('POST',url, body=encoded_msg)
             val['http_send_response'] = str(response)
 
-    print(json.dumps(nonconpliants, indent=2))
-    awsEvent.detail_type = nonconpliants
+    print(json.dumps(violations, indent=2))
+    awsEvent.detail_type = violations
 
     #Return event for further processing
     return Marshaller.marshall(awsEvent)
