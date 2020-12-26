@@ -19,6 +19,28 @@ import glob
 import functools
 import re
 
+#handle NextToken, or you would have incomplete results
+def select_aggregate_resource_config(Expression, ConfigurationAggregatorName, NextToken=None, current={'Results': []}):
+
+    kwargs = {'NextToken': NextToken} if NextToken else {}
+
+    try:
+        page = client.select_aggregate_resource_config(
+            Expression=Expression,
+            ConfigurationAggregatorName=ConfigurationAggregatorName,
+            **kwargs
+        )
+        current.get('Results').extend(page.get('Results'))
+    except:
+        print(sys.exc_info())
+        print('Error: something is wrong. Result may possibly be incomplete')
+        return current
+
+    if page.get('NextToken') is None:
+        return current
+    else:
+        return select_aggregate_resource_config(Expression, ConfigurationAggregatorName, page.get('NextToken'), current)
+
 def audit(context):
     nonconpliants = []
     with open(context, 'r') as json_file:
@@ -34,7 +56,7 @@ def audit(context):
     print(configRuleName)
 
     #https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/config.html#ConfigService.Client.select_aggregate_resource_config
-    response = client.select_aggregate_resource_config(
+    response = select_aggregate_resource_config(
         #https://github.com/awslabs/aws-config-resource-schema/blob/master/config/properties/AWS.properties.json
         Expression='''
             SELECT
@@ -49,16 +71,11 @@ def audit(context):
               AND configuration.configRuleList.configRuleName = '{0}'
         '''.format(configRuleName),
         ConfigurationAggregatorName='ConfigurationAggregator',
-        #Limit=123,
-        #MaxResults=123,
-        #NextToken='string' #handle this thing, or you would have incomplete results
     )
 
-
-
     for resultText in response['Results']:
-        #print(json.dumps(json.loads(result), indent=2))
         result = json.loads(resultText)
+        #print(json.dumps(result,indent=2))
         # prepare template
         contextTemplateObject = [
             json_text,
@@ -134,7 +151,8 @@ def lambda_handler(event, context):
     #awsEvent.detail_type = "HelloWorldFunction updated event of " + awsEvent.detail_type + str(os.environ['SENDTO']);
     #awsEvent.detail_type = msg
     #awsEvent.detail_type = nonconpliants
-    awsEvent.detail_type = str(nonconpliants)
+    #awsEvent.detail_type = str(nonconpliants)
+    awsEvent.detail_type = ''
     #awsEvent.detail_type = json.dumps(response, indent=2)
 
     #Return event for further processing
