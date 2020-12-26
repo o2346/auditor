@@ -142,20 +142,8 @@ def lambda_handler(event, context):
             val['http_send_response'] = str(response)
         #nonconpliants[filename]['http_send_response'] = 'mocresponce'
 
-    #usage example:
-    #sam build && sam local invoke --parameter-overrides SendTo=YOUR_WEBHOOK_URL
-    #msg = audit('hoge')
-    #encoded_msg = json.dumps(msg).encode('utf-8')
-    #resp = http.request('POST',url, body=encoded_msg)
-    #resptxt = json.dumps(resp)
-
-    #Make updates to event payload, if desired
-    #awsEvent.detail_type = "HelloWorldFunction updated event of " + awsEvent.detail_type + str(os.environ['SENDTO']);
-    #awsEvent.detail_type = msg
-    #awsEvent.detail_type = nonconpliants
-    report = json.dumps(nonconpliants, indent=2)
-    print(report)
-    awsEvent.detail_type = report
+    print(json.dumps(nonconpliants, indent=2))
+    awsEvent.detail_type = nonconpliants
 
     #Return event for further processing
     return Marshaller.marshall(awsEvent)
