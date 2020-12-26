@@ -58,6 +58,9 @@ def audit(context):
     print(configRuleName)
 
     #https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/config.html#ConfigService.Client.select_aggregate_resource_config
+    #Note: you may want to limit number of length for response since enormous violations would have returned
+    #An idea to restrict the length is here. Absent from handling NextToken and provide argument "Limit=N"
+    #response = client.select_aggregate_resource_config(
     response = select_aggregate_resource_config(
         #https://github.com/awslabs/aws-config-resource-schema/blob/master/config/properties/AWS.properties.json
         Expression='''
@@ -72,7 +75,8 @@ def audit(context):
               configuration.complianceType = 'NON_COMPLIANT'
               AND configuration.configRuleList.configRuleName = '{0}'
         '''.format(configRuleName),
-        ConfigurationAggregatorName='ConfigurationAggregator',
+        ConfigurationAggregatorName='ConfigurationAggregator'
+        #Limit=20
     )
 
     for resultText in response['Results']:
