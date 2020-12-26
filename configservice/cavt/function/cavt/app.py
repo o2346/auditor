@@ -95,14 +95,11 @@ def audit(context):
 
 
 def lambda_handler(event, context):
-    """Sample Lambda function reacting to EventBridge events
+    """Lambda function reacting to Scheduled events
 
     Parameters
     ----------
-    event: dict, required
-        Event Bridge Events Format
-
-        Event doc: https://docs.aws.amazon.com/eventbridge/latest/userguide/event-types.html
+    event: dict
 
     context: object, required
         Lambda Context runtime methods and attributes
