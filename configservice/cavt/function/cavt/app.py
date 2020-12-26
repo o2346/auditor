@@ -150,9 +150,7 @@ def lambda_handler(event, context):
     #Make updates to event payload, if desired
     #awsEvent.detail_type = "HelloWorldFunction updated event of " + awsEvent.detail_type + str(os.environ['SENDTO']);
     #awsEvent.detail_type = msg
-    #awsEvent.detail_type = nonconpliants
-    #awsEvent.detail_type = str(nonconpliants)
-    awsEvent.detail_type = ''
+    awsEvent.detail_type = nonconpliants
     #awsEvent.detail_type = json.dumps(response, indent=2)
 
     #Return event for further processing
