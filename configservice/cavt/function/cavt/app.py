@@ -134,10 +134,12 @@ def lambda_handler(event, context):
         if len(audited) == 0:
             continue
 
-        nonconpliants[filename]=audited
-        for idx, val in enumerate(nonconpliants[filename]):
+        rule_context_name = os.path.splitext(os.path.basename(filename))[0]
+        nonconpliants[rule_context_name]=audited
+        for idx, val in enumerate(nonconpliants[rule_context_name]):
             encoded_msg = json.dumps(val).encode('utf-8')
-            val['http_send_response'] = http.request('POST',url, body=encoded_msg)
+            response = http.request('POST',url, body=encoded_msg)
+            val['http_send_response'] = str(response)
         #nonconpliants[filename]['http_send_response'] = 'mocresponce'
 
     #usage example:
@@ -150,8 +152,10 @@ def lambda_handler(event, context):
     #Make updates to event payload, if desired
     #awsEvent.detail_type = "HelloWorldFunction updated event of " + awsEvent.detail_type + str(os.environ['SENDTO']);
     #awsEvent.detail_type = msg
-    awsEvent.detail_type = nonconpliants
-    #awsEvent.detail_type = json.dumps(response, indent=2)
+    #awsEvent.detail_type = nonconpliants
+    report = json.dumps(nonconpliants, indent=2)
+    print(report)
+    awsEvent.detail_type = report
 
     #Return event for further processing
     return Marshaller.marshall(awsEvent)
