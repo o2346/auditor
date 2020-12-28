@@ -101,7 +101,9 @@ def audit(context):
     total = functools.reduce(lambda a,b:a+b, [ json.loads(o)['COUNT(*)'] for o in summaryResponse['Results'] ])
     #total = functools.reduce(lambda a,b :a+b, map(lambda s: s['COUNT(*)'],summaryResponse['Results']))
 
-    if total > 20:
+    print(os.environ['MaxViolationDetailsSendTo'])
+
+    if total > int(os.environ['MaxViolationDetailsSendTo']):
         toomanyMsg = ' - **[Warning] TOO MANY violations. Ommited to report for each ones**'
     else:
         toomanyMsg = ''
@@ -121,7 +123,7 @@ def audit(context):
     ]
     summaryItem = json.loads(functools.reduce(lambda a,b :re.sub(b[0], str(b[1]), a) ,summaryReportMapping))
     #print(json.dumps(summaryItem, indent=2))
-    if total > 20:
+    if total > int(os.environ['MaxViolationDetailsSendTo']):
         print('[Warning] Number of Violations has exceeded threshold. Summary only')
         violations.append(summaryItem)
         return violations
