@@ -68,7 +68,7 @@ There are 2 kinds of messages to be transmitted
 ### Misc
 
 - self-imposed posting restraint
-  - Omit reporting Individuals if too many (number of actual non-compliants has exceeded predefined threshold)
+  - Omit reporting Individuals if too many (to be accurate, number of actual non-compliants has exceeded predefined threshold)
     - Even at such a case, Summary will be transmitted at least. So anyway you would be noticed there were many.
   - Without this restraint, You would receive the same number of messages if there were 1000 or more of non-compliants
     - Assuming such a behavior is undesirable.
