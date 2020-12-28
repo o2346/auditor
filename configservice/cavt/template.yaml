@@ -10,6 +10,10 @@ Parameters:
     Type: String
     Default: https://hooks.slack.com/services/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
     Description: Slack WebHook url
+  MaxViolationDetailsSendTo:
+    Type: Number
+    Default: 20
+    Description: No details will transmitted if number of the items has exceeded this value. Summary only instead
 
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
@@ -18,6 +22,7 @@ Globals:
     Environment: #https://github.com/aws/aws-sam-cli/issues/1163#issuecomment-514031539
       Variables:
         SENDTO: !Ref SendTo
+        MaxViolationDetailsSendTo: !Ref MaxViolationDetailsSendTo
 
 Resources:
   Function:
