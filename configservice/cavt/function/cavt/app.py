@@ -29,7 +29,6 @@ def select_aggregate_resource_config(Expression, ConfigurationAggregatorName, Ne
     #https://www.toptal.com/python/top-10-mistakes-that-python-programmers-make
     if current is None:
         current = {'Results': []}
-    #print('current')
     #print(len(current['Results']))
 
     kwargs = {'NextToken': NextToken} if NextToken else {}
@@ -100,22 +99,14 @@ def audit(context):
     summaryResponse['Results'].extend({'{"COUNT(*)":20,"accountId":"999999999999"}'})
 
     total = functools.reduce(lambda a,b:a+b, [ json.loads(o)['COUNT(*)'] for o in summaryResponse['Results'] ])
-    #total = functools.reduce(lambda a,b :a+b, map(lambda s: s['COUNT(*)'],summaryResponse['Results']))
-
-    print(os.environ['MaxViolationDetailsSendTo'])
 
     if total > int(os.environ['MaxViolationDetailsSendTo']):
         toomanyMsg = ' - **[Warning] TOO MANY violations. Ommited to report for each ones**'
     else:
         toomanyMsg = ''
 
-    print(total)
     sumList = '\\\\n'.join( [ str(json.loads(o)['accountId'])+' '+str(json.loads(o)['COUNT(*)']) for o in summaryResponse['Results'] ] )
     #https://api.slack.com/reference/surfaces/formatting#line-breaks
-    #print(sumList)
-    #print('\n'.join(summaryResponse['Results']))
-
-    #print(json.dumps(result,indent=2))
     # prepare template
     summaryReportMapping = [
         summary_template,
@@ -124,7 +115,6 @@ def audit(context):
         [ 'value.toomanyMsg', toomanyMsg ],
     ]
     summaryItem = json.loads(functools.reduce(lambda a,b :re.sub(b[0], str(b[1]), a) ,summaryReportMapping))
-    #print(json.dumps(summaryItem, indent=2))
     if total > int(os.environ['MaxViolationDetailsSendTo']):
         print('[Warning] Number of Violations has exceeded threshold. Summary only')
         violations.append(summaryItem)
@@ -155,11 +145,8 @@ def audit(context):
         ConfigurationAggregatorName='ConfigurationAggregator'
     )
 
-    #print(response['Results'])
-
     for resultText in response['Results']:
         result = json.loads(resultText)
-        #print('result=' + str(result))
         # prepare template
         contextTemplateObject = [
             json_text,
