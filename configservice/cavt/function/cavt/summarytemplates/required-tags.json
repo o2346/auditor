@@ -4,30 +4,25 @@
   "attachments": [ {
     "fallback": "",
     "color": "warning",
-    "pretext": "Following has been marked as non-compliant against rule defined by the organization's compliance team",
+    "pretext": "Issues marked as non-compliant against rule defined by the organization's compliance team",
     "fields": [
       {
-        "title": "list",
+        "title": "Account NonCompliantsCount",
         "value": "value.ViolationCountsByAccount"
       },
       {
-        "title": "Totalling",
-        "value": "value.Totalling value.toomanyMsg",
+        "title": "Totalling among the accounts",
+        "value": "value.Totalling",
         "short": "true"
+      },
+      {
+        "title": "Note",
+        "value": "value.toomanyMsg"
       },
       {
         "title": "rule against",
         "value": "<https://awsRegion.console.aws.amazon.com/config/home?region=awsRegion&awsc-custsat-override=promptUser#/rules/rule-details/required-tags|required-tags> - AWS Config Managed rule",
         "short": "true"
-      },
-      {
-        "title": "remediation",
-        "value": "Associate absent tag to the resource properly",
-        "short": "true"
-      },
-      {
-        "title": "rule description",
-        "value": "Such a resource type is supposed to be associated with predefined tags. Visit <https://awsRegion.console.aws.amazon.com/config/home?region=awsRegion&awsc-custsat-override=promptUser#/rules/rule-details/required-tags|required-tags> or else ask your compliance team for details"
       }
     ],
     "props": {

@@ -96,14 +96,14 @@ def audit(context):
 
     #for testing
     summaryResponse['Results'].extend({'{"COUNT(*)":16,"accountId":"888888888888"}'})
-    summaryResponse['Results'].extend({'{"COUNT(*)":20,"accountId":"999999999999"}'})
+    #summaryResponse['Results'].extend({'{"COUNT(*)":20,"accountId":"999999999999"}'})
 
     total = functools.reduce(lambda a,b:a+b, [ json.loads(o)['COUNT(*)'] for o in summaryResponse['Results'] ])
 
     if total > int(os.environ['MaxViolationDetailsSendTo']):
-        toomanyMsg = ' - **[Warning] TOO MANY violations. Ommited to report for each ones**'
+        toomanyMsg = '[Warning] Reporting have been ommitted for individuals since number of violations has exceeded threshold *' + os.environ['MaxViolationDetailsSendTo'] + '*. Go to Aggregated View of the Compliance Account for each ones.'
     else:
-        toomanyMsg = ''
+        toomanyMsg = 'Check the previous messages above for details. They are also available on Aggregated View of the Compliance Account'
 
     sumList = '\\\\n'.join( [ str(json.loads(o)['accountId'])+' '+str(json.loads(o)['COUNT(*)']) for o in summaryResponse['Results'] ] )
     #https://api.slack.com/reference/surfaces/formatting#line-breaks

@@ -12,7 +12,7 @@ Parameters:
     Description: Slack WebHook url
   MaxViolationDetailsSendTo:
     Type: Number
-    Default: 20
+    Default: 8
     Description: No details will transmitted if number of the items has exceeded this value. Summary only instead
 
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
