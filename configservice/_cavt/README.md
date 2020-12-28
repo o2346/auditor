@@ -1,6 +1,6 @@
-# configservice aggregated violation transmitter
+# Configservice Aggregated Non-compliant Transmitter
 
-Sends noncompliant items which violates against config rule to Slack channel
+Sends noncompliant items which violates against config rule, to Slack channel
 
 This is developed with [sam]() and based on a following selection from the tool:
 
@@ -12,22 +12,31 @@ This is developed with [sam]() and based on a following selection from the tool:
 
 You may find this Schema while interacting on `sam init`.
 
-## Prerequsites
+## Prerequisites
 
-To begin with, obtain Credentials of your Compliance account on terminal.
-Make sure an aggregator is ready on the Compliance account. A sample way to set up an aggregator is introduced at above directory.
+- obtain Credentials of your Compliance account on terminal
+- Make sure an aggregator is ready on the Compliance account
+  - fyi, a sample way to set up an aggregator is introduced at directory above.
+- set up 'required-tags' on some Source accounts, at least one
+  - You could not confirm any message if the rule was not present or everything was compliant, of course
+- obtain webhook url of Your slack channel
+  - `\invite AWS` if the desired channel was private
 
-## Build
+## Start
+
+Just `git clone` this repo and `cd` to this directory, issue following commands
+
+### Build
 
 `sam build`
 
-## Deploy
+### Deploy
 
 ```
 sam deploy --parameter-overrides SendTo=https://hooks.slack.com/services/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX --resolve-s3
 ```
 
-## local
+### local
 
 ```
 sam build && sam local invoke --parameter-overrides SendTo=https://hooks.slack.com/services/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -43,9 +52,32 @@ on another terminal, review output by following:
 
 `tail -f /tmp/invoke.log`
 
+## Features
 
-## Confirmation
+As default, Only 'required-tags' are the rule to inspect.
 
-Check the Slack channel that defined by yourself
+### Message types
+
+There are 2 kinds of messages to be transmitted
+
+- Individual
+  - One message per non-compliant
+- Summary
+  - Reports number of non-compliants for each Source accounts
+
+### Misc
+
+- self-imposed posting restraint
+  - Omit reporting Individuals if too many (number of actual non-compliants has exceeded predefined threshold)
+    - Even at such a case, Summary will be transmitted at least. So anyway you would be noticed there were many.
+  - Without this restraint, You would receive the same number of messages if there were 1000 or more of non-compliants
+    - Assuming such a behavior is undesirable.
+- Summary will finally be omitted if there was zero non-compliants. Congratulations.
+
+## todo for future
+
+Defferent rules other than 'required-tags' could be applied.
+It supposed to be availabe by adding proper context jsons.
+Unfortunately that is not tested and well documented yet.
 
 <!-- configservice-aggregated-violation-transmitter -->
