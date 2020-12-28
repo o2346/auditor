@@ -74,6 +74,7 @@ def audit(context):
         summary_template = json.dumps(json.load(summary_template_file))
 
     summaryResponse = select_aggregate_resource_config(
+        #https://docs.aws.amazon.com/config/latest/developerguide/example-query.html
         Expression=f'''
             SELECT
               accountId,
@@ -110,6 +111,7 @@ def audit(context):
 
     print(total)
     sumList = '\\\\n'.join( [ str(json.loads(o)['accountId'])+' '+str(json.loads(o)['COUNT(*)']) for o in summaryResponse['Results'] ] )
+    #https://api.slack.com/reference/surfaces/formatting#line-breaks
     #print(sumList)
     #print('\n'.join(summaryResponse['Results']))
 
