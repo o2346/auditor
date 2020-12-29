@@ -97,7 +97,7 @@ def audit(context):
     total = functools.reduce(lambda a,b:a+b, [ json.loads(o)['COUNT(*)'] for o in summaryResponse['Results'] ])
 
     if total > int(os.environ['MaxViolationDetailsSendTo']):
-        toomanyMsg = '*[Warning]* Reports for the Individuals to this channel have been omitted since number of noncompliant resources has exceeded threshold *' + os.environ['MaxViolationDetailsSendTo'] + '*. Go to <https://docs.aws.amazon.com/config/latest/developerguide/aggregate-data.html|Aggregated View> of the Compliance Account to review details instead.'
+        toomanyMsg = '*[Warning]* Individuals to this channel have been omitted since number of noncompliant resources has exceeded threshold *' + os.environ['MaxViolationDetailsSendTo'] + '*. Go to <https://docs.aws.amazon.com/config/latest/developerguide/aggregate-data.html|Aggregated View> of the Compliance Account instead.'
     else:
         toomanyMsg = 'Check the previous messages for Individuals. They are also available on <https://docs.aws.amazon.com/config/latest/developerguide/aggregate-data.html|Aggregated View> of the Compliance Account'
 
