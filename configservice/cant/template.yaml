@@ -28,8 +28,8 @@ Resources:
   Function:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: function
-      Handler: cavt/app.lambda_handler
+      CodeUri: src
+      Handler: function/app.lambda_handler
       Runtime: python3.8
       Policies:
         - Statement: #https://aws.amazon.com/premiumsupport/knowledge-center/lambda-sam-template-permissions/

@@ -68,7 +68,7 @@ def audit(context):
     #
     #Generate Summary
     #
-    summary_template_location = str(os.environ['LAMBDA_TASK_ROOT'] + "/cavt/summarytemplates/" + configRuleName + '.json')
+    summary_template_location = str(os.environ['LAMBDA_TASK_ROOT'] + "/function/summarytemplates/" + configRuleName + '.json')
     with open(summary_template_location, 'r') as summary_template_file:
         summary_template = json.dumps(json.load(summary_template_file))
 
@@ -189,7 +189,7 @@ def lambda_handler(event, context):
     #Execute business logic
     url = os.environ['SENDTO']
     violations = {}
-    for (filename) in glob.glob(str(os.environ['LAMBDA_TASK_ROOT'] + "/cavt/rules/*.json")):
+    for (filename) in glob.glob(str(os.environ['LAMBDA_TASK_ROOT'] + "/function/rules/*.json")):
         audited = audit(filename)
         if len(audited) == 0:
             continue
