@@ -69,7 +69,8 @@ sam build && sam local invoke --parameter-overrides SendTo=https://hooks.slack.c
 ### Invoke with tailing debug output
 
 ```
-sam build && sam local invoke --parameter-overrides SendTo=https://hooks.slack.com/services/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX --debug -l "$(dirname $(mktemp -u))"/invoke.log
+sendto=https://hooks.slack.com/services/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+sam build && sam local invoke --parameter-overrides SendTo=$sendto --debug -l "$(dirname $(mktemp -u))"/invoke.log
 ```
 
 On the other hand, review output by something like:
