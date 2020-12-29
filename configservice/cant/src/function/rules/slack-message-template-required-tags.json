@@ -37,7 +37,7 @@
         "short": "true"
       },
       {
-        "title": "rule description",
+        "title": "Rule Description",
         "value": "Such a resource type is supposed to be associated with predefined tags. Visit <https://awsRegion.console.aws.amazon.com/config/home?region=awsRegion&awsc-custsat-override=promptUser#/rules/rule-details/required-tags|required-tags> or else ask your compliance team for details"
       }
     ],
