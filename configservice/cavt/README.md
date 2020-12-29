@@ -1,16 +1,6 @@
 # Configservice Aggregated Non-compliance Transmitter
 
-Sends warning message for noncompliant resouce(s) which violates against config rule to Slack channel. Currently only a managed rule 'required-tags' was confirmed work.
-
-This is developed with [sam](https://aws.amazon.com/serverless/sam/) and based on a following selection from the tool:
-
->
-> AWS quick start application templates:
->         3 - EventBridge App from scratch (100+ Event Schemas)
->
->       66 - aws.events@ScheduledJson
-
-You may find this Schema while interacting `sam init`.
+Sends warning message to Slack channel about noncompliant resource(s) which violates against config rule. Currently only a managed rule 'required-tags' is confirmed work.
 
 This project contains source code and supporting files for a serverless application that you can deploy with the SAM CLI. It includes the following files and folders.
 
@@ -20,6 +10,16 @@ This project contains source code and supporting files for a serverless applicat
 - template.yaml - A template that defines the application's AWS resources.
 
 The application uses several AWS resources, including Lambda functions and a ScheduledEvent. These resources are defined in the `template.yaml` file in this project. You can update the template to add AWS resources through the same deployment process that updates your application code.
+
+and based on a following selection from the tool:
+
+>
+> AWS quick start application templates:
+>         3 - EventBridge App from scratch (100+ Event Schemas)
+>
+>       66 - aws.events@ScheduledJson
+
+You may find this Schema while interacting `sam init`.
 
 ## Prerequisites
 
@@ -82,21 +82,21 @@ As default, Only 'required-tags' is rule to inspect.
 
 ### Message types
 
-There are 2 kinds of messages to be transmitted
+There are 2 types of message to be transmitted
 
 - Individual
-  - One message per noncompliant resouce
+  - One message per noncompliant resource
 - Summary
-  - Reports number of noncompliant resouces for each Source accounts
+  - Reports number of noncompliant resources for each Source accounts
 
 
 ### Self-Imposed Posting Restraint
 
 - Omit reporting Individuals if too many
-  - To be more precise, if number of actual noncompliant resouces has exceeded predefined threshold
+  - To be more precise, if number of actual noncompliant resources has exceeded predefined threshold
   - Even at such a case, Summary will anyway be transmitted
     - So you would at least be noticed there were many of them. Go to Aggregated View on Management Console for individual details at such case
-- Without this restraint, You might receive the huge number of messages as well as number of noncompliant resouces. For instance, if there were 1000 of noncompliant resouces, number of messages would be the same
+- Without this restraint, You might receive the huge number of messages as well as number of noncompliant resources. For instance, if there were 1000 of noncompliant resources, number of messages would be the same
   - Assuming such a behavior is undesirable
 
 ### Misc
