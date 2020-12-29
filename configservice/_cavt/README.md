@@ -15,8 +15,9 @@ You may find this Schema while interacting `sam init`.
 ## Prerequisites
 
 - Obtain Credentials of your Compliance account on terminal
-- Make sure an aggregator named `ConfigurationAggregator` is ready on the Compliance account as well as Souce account(s)
+- Make sure an aggregator named `ConfigurationAggregator` is ready on the Compliance account
   - fyi, a sample way to set up an aggregator is introduced at directory above.
+- Souce account(s) with Aggregation auth
 - Set up 'required-tags' on some Source account(s), at least one
   - You would not recive any message if the rule was not present or every resources in the scope was compliant
 - Obtain webhook URL of your Slack chat room
@@ -69,12 +70,12 @@ There are 2 kinds of messages to be transmitted
 
 - Self-Imposed Posting Restraint
   - Omit reporting Individuals if too many
-    - to be accurate, if number of actual noncompliant resouces has exceeded predefined threshold
+    - To be more precise, if number of actual noncompliant resouces has exceeded predefined threshold
     - Even at such a case, Summary will anyway be transmitted
       - So you would at least be noticed there were many of them. Go to Aggregated View on Management Console for individual details at such case
-  - Without this restraint, You would receive the huge number of messages as well as number of noncompliant resouces. For instance, if there were 1000 of noncompliant resouces, number of messages would be the same
+  - Without this restraint, You might receive the huge number of messages as well as number of noncompliant resouces. For instance, if there were 1000 of noncompliant resouces, number of messages would be the same
     - Assuming such a behavior is undesirable
-- Summary will finally be omitted if there was zero noncompliant resouce. Congratulations.
+- Summary will finally be omitted if there was zero noncompliant resource. Congratulations.
 
 ## todo for future
 
