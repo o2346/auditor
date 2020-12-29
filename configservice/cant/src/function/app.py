@@ -6,22 +6,18 @@ from schema.aws.events.scheduledjson import ScheduledEvent
 
 import json
 import os
+import glob
+import functools
+import re
+import sys
 
 #https://aws.amazon.com/premiumsupport/knowledge-center/sns-lambda-webhooks-chime-slack-teams/
 #https://docs.aws.amazon.com/lambda/latest/dg/services-cloudwatchevents.html
 import urllib3
-import json
 http = urllib3.PoolManager()
 
 import boto3
 client = boto3.client('config')
-
-import glob
-
-import functools
-import re
-
-import sys
 
 #handle NextToken, or you would have incomplete results
 def select_aggregate_resource_config(Expression, ConfigurationAggregatorName, NextToken=None, current=None):
@@ -114,14 +110,16 @@ def audit(context):
         [ 'value.Totalling', total ],
         [ 'value.toomanyMsg', toomanyMsg ],
     ]
+
     summaryItem = json.loads(functools.reduce(lambda a,b :re.sub(b[0], str(b[1]), a) ,summaryReportMapping))
+
     if total > int(os.environ['MaxViolationDetailsSendTo']):
         print('[Warning] Number of Violations has exceeded threshold. Summary only')
         violations.append(summaryItem)
         return violations
 
     #
-    #Generate Details
+    #Generate Individuals
     #
     #https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/config.html#ConfigService.Client.select_aggregate_resource_config
     #Note: you may want to limit length for the response since enormous number of violations would have returned
