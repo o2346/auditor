@@ -91,12 +91,12 @@ def audit(context):
     #summaryResponse['Results'] = []
 
     if len(summaryResponse['Results']) == 0:
-        print('Excellent. There isn no Violation. Abort')
+        print('Excellent. Nothing is marked as noncompliant. Abort')
         return violations
 
     #for testing
-    summaryResponse['Results'].extend({'{"COUNT(*)":16,"accountId":"888888888888"}'})
-    summaryResponse['Results'].extend({'{"COUNT(*)":20,"accountId":"999999999999"}'})
+    #summaryResponse['Results'].extend({'{"COUNT(*)":16,"accountId":"888888888888"}'})
+    #summaryResponse['Results'].extend({'{"COUNT(*)":20,"accountId":"999999999999"}'})
 
     total = functools.reduce(lambda a,b:a+b, [ json.loads(o)['COUNT(*)'] for o in summaryResponse['Results'] ])
 
