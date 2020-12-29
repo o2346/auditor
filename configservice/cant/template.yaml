@@ -1,9 +1,8 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: >
-  cavt
-
-  Sample SAM Template for cavt
+  Configservice Aggregated Non-compliance Transmitter
+  SAM Template
 
 Parameters:
   SendTo:

@@ -1,13 +1,13 @@
 {
   "icon_emoji": ":warning:",
-  "text": ":warning: *Summary for Non-compliant* - Configservice Aggregated Violation Transmitter",
+  "text": ":warning: *Summary* - Configservice Aggregated Non-compliance Transmitter",
   "attachments": [ {
     "fallback": "",
-    "color": "warning",
-    "pretext": "Issues marked as non-compliant against rule defined by the organization's compliance team",
+    "color": "#7B7D7D",
+    "pretext": "Those were marked as non-compliant against rule defined by the organization's compliance team",
     "fields": [
       {
-        "title": "Account NonCompliantsCount",
+        "title": "Account NonCompliantResourcesCount",
         "value": "value.ViolationCountsByAccount"
       },
       {
@@ -20,7 +20,7 @@
         "value": "value.toomanyMsg"
       },
       {
-        "title": "rule against",
+        "title": "Rule",
         "value": "<https://awsRegion.console.aws.amazon.com/config/home?region=awsRegion&awsc-custsat-override=promptUser#/rules/rule-details/required-tags|required-tags> - AWS Config Managed rule",
         "short": "true"
       }

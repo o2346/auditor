@@ -1,4 +1,4 @@
-#configservice aggregated violation transmitter - main function
+#Configservice Aggregated Non-compliance Transmitter - main function
 
 from schema.aws.events.scheduledjson import Marshaller
 from schema.aws.events.scheduledjson import AWSEvent
@@ -101,9 +101,9 @@ def audit(context):
     total = functools.reduce(lambda a,b:a+b, [ json.loads(o)['COUNT(*)'] for o in summaryResponse['Results'] ])
 
     if total > int(os.environ['MaxViolationDetailsSendTo']):
-        toomanyMsg = '[Warning] Reporting have been ommitted for individuals since number of violations has exceeded threshold *' + os.environ['MaxViolationDetailsSendTo'] + '*. Go to Aggregated View of the Compliance Account for each ones.'
+        toomanyMsg = '[Warning] Separated reporting messages for the Individuals have been omitted since number of noncompliant resources has exceeded threshold *' + os.environ['MaxViolationDetailsSendTo'] + '*. Go to <https://docs.aws.amazon.com/config/latest/developerguide/aggregate-data.html|Aggregated View> of the Compliance Account for details.'
     else:
-        toomanyMsg = 'Check the previous messages above for details. They are also available on Aggregated View of the Compliance Account'
+        toomanyMsg = 'Check the previous messages for Individuals. They are also available on <https://docs.aws.amazon.com/config/latest/developerguide/aggregate-data.html|Aggregated View> of the Compliance Account'
 
     sumList = '\\\\n'.join( [ str(json.loads(o)['accountId'])+' '+str(json.loads(o)['COUNT(*)']) for o in summaryResponse['Results'] ] )
     #https://api.slack.com/reference/surfaces/formatting#line-breaks
