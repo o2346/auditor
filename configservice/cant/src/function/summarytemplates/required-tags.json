@@ -17,7 +17,7 @@
       },
       {
         "title": "Rule",
-        "value": "<https://awsRegion.console.aws.amazon.com/config/home?region=awsRegion&awsc-custsat-override=promptUser#/rules/rule-details/required-tags|required-tags> - AWS Config Managed rule",
+        "value": "<https://docs.aws.amazon.com/config/latest/developerguide/required-tags.html|required-tags> - AWS Config Managed rule",
         "short": "true"
       },
       {
