@@ -1,6 +1,6 @@
-# Configservice Aggregated Noncompliant Transmitter
+# Configservice Aggregated Non-compliance Transmitter
 
-Sends noncompliant items which violates against config rule, to Slack channel
+Sends warning message for noncompliant resouce(s) which violates against config rule to Slack channel. Currently this is aiming at a managed rule 'required-tags'
 
 This is developed with [sam](https://aws.amazon.com/serverless/sam/) and based on a following selection from the tool:
 
@@ -10,17 +10,17 @@ This is developed with [sam](https://aws.amazon.com/serverless/sam/) and based o
 >
 >       66 - aws.events@ScheduledJson
 
-You may find this Schema while interacting on `sam init`.
+You may find this Schema while interacting `sam init`.
 
 ## Prerequisites
 
-- obtain Credentials of your Compliance account on terminal
+- Obtain Credentials of your Compliance account on terminal
 - Make sure an aggregator is ready on the Compliance account
   - fyi, a sample way to set up an aggregator is introduced at directory above.
-- set up 'required-tags' on some Source accounts, at least one
-  - You could not confirm any message if the rule was not present or everything was compliant, of course
-- obtain webhook url of Your slack channel
-  - `\invite AWS` if the desired channel was private
+- Set up 'required-tags' on some Source account(s), at least one
+  - You would not recive any message if the rule was not present or every resources in the scope was compliant
+- Obtain webhook url of a Slack channel of yours
+  - [/invite @AWS](https://docs.aws.amazon.com/chatbot/latest/adminguide/getting-started.html#chat-client-setup) if the desired channel was private
 
 ## Start
 
@@ -45,12 +45,12 @@ sam build && sam local invoke --parameter-overrides SendTo=https://hooks.slack.c
 ### with debug output
 
 ```
-sam build && sam local invoke --parameter-overrides SendTo=https://hooks.slack.com/services/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX --debug -l /tmp/invoke.log
+sam build && sam local invoke --parameter-overrides SendTo=https://hooks.slack.com/services/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX --debug -l "$(dirname $(mktemp -u))"/invoke.log
 ```
 
-on another terminal, review output by following:
+On the other hand, review output by something like:
 
-`tail -f /tmp/invoke.log`
+`tail -f "$(dirname $(mktemp -u))"/invoke.log`
 
 ## Features
 
@@ -61,18 +61,19 @@ As default, Only 'required-tags' are the rule to inspect.
 There are 2 kinds of messages to be transmitted
 
 - Individual
-  - One message per Noncompliant
+  - One message per noncompliant resouce
 - Summary
-  - Reports number of Noncompliants for each Source accounts
+  - Reports number of noncompliant resouces for each Source accounts
 
 ### Misc
 
 - self-imposed posting restraint
-  - Omit reporting Individuals if too many (to be accurate, number of actual Noncompliants has exceeded predefined threshold)
-    - Even at such a case, Summary will be transmitted at least. So anyway you would be noticed there were many.
-  - Without this restraint, You would receive the same number of messages if there were 1000 or more of Noncompliants
+  - Omit reporting Individuals if too many 
+    - to be accurate, number of actual noncompliant resouces has exceeded predefined threshold
+    - Even at such a case, Summary will be transmitted at least. So anyway you would be noticed there were many of them
+  - Without this restraint, You would receive the huge number of messages as well as number of noncompliant resouces. For instance, if there were 1000 of noncompliant resouces, number of messages would be the same
     - Assuming such a behavior is undesirable.
-- Summary will finally be omitted if there was zero Noncompliants. Congratulations.
+- Summary will finally be omitted if there was zero noncompliant resouce(s)s. Congratulations.
 
 ## todo for future
 
