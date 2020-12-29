@@ -1,8 +1,8 @@
-# Configservice Aggregated Non-compliant Transmitter
+# Configservice Aggregated Noncompliant Transmitter
 
 Sends noncompliant items which violates against config rule, to Slack channel
 
-This is developed with [sam]() and based on a following selection from the tool:
+This is developed with [sam](https://aws.amazon.com/serverless/sam/) and based on a following selection from the tool:
 
 >
 > AWS quick start application templates:
@@ -61,18 +61,18 @@ As default, Only 'required-tags' are the rule to inspect.
 There are 2 kinds of messages to be transmitted
 
 - Individual
-  - One message per non-compliant
+  - One message per Noncompliant
 - Summary
-  - Reports number of non-compliants for each Source accounts
+  - Reports number of Noncompliants for each Source accounts
 
 ### Misc
 
 - self-imposed posting restraint
-  - Omit reporting Individuals if too many (to be accurate, number of actual non-compliants has exceeded predefined threshold)
+  - Omit reporting Individuals if too many (to be accurate, number of actual Noncompliants has exceeded predefined threshold)
     - Even at such a case, Summary will be transmitted at least. So anyway you would be noticed there were many.
-  - Without this restraint, You would receive the same number of messages if there were 1000 or more of non-compliants
+  - Without this restraint, You would receive the same number of messages if there were 1000 or more of Noncompliants
     - Assuming such a behavior is undesirable.
-- Summary will finally be omitted if there was zero non-compliants. Congratulations.
+- Summary will finally be omitted if there was zero Noncompliants. Congratulations.
 
 ## todo for future
 
