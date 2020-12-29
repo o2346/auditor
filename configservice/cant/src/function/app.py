@@ -95,13 +95,13 @@ def audit(context):
         return violations
 
     #for testing
-    #summaryResponse['Results'].extend({'{"COUNT(*)":16,"accountId":"888888888888"}'})
-    #summaryResponse['Results'].extend({'{"COUNT(*)":20,"accountId":"999999999999"}'})
+    summaryResponse['Results'].extend({'{"COUNT(*)":16,"accountId":"888888888888"}'})
+    summaryResponse['Results'].extend({'{"COUNT(*)":20,"accountId":"999999999999"}'})
 
     total = functools.reduce(lambda a,b:a+b, [ json.loads(o)['COUNT(*)'] for o in summaryResponse['Results'] ])
 
     if total > int(os.environ['MaxViolationDetailsSendTo']):
-        toomanyMsg = '[Warning] Separated reporting messages for the Individuals have been omitted since number of noncompliant resources has exceeded threshold *' + os.environ['MaxViolationDetailsSendTo'] + '*. Go to <https://docs.aws.amazon.com/config/latest/developerguide/aggregate-data.html|Aggregated View> of the Compliance Account for details.'
+        toomanyMsg = '*[Warning]* Separated reporting messages for the Individuals have been omitted since number of noncompliant resources has exceeded threshold *' + os.environ['MaxViolationDetailsSendTo'] + '*. Go to <https://docs.aws.amazon.com/config/latest/developerguide/aggregate-data.html|Aggregated View> of the Compliance Account for details.'
     else:
         toomanyMsg = 'Check the previous messages for Individuals. They are also available on <https://docs.aws.amazon.com/config/latest/developerguide/aggregate-data.html|Aggregated View> of the Compliance Account'
 
