@@ -95,7 +95,7 @@ def audit(context):
         return violations
 
     #for testing
-    summaryResponse['Results'].extend({'{"COUNT(*)":16,"accountId":"888888888888"}'})
+    #summaryResponse['Results'].extend({'{"COUNT(*)":16,"accountId":"888888888888"}'})
     #summaryResponse['Results'].extend({'{"COUNT(*)":20,"accountId":"999999999999"}'})
 
     total = functools.reduce(lambda a,b:a+b, [ json.loads(o)['COUNT(*)'] for o in summaryResponse['Results'] ])

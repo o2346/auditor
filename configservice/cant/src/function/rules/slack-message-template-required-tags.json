@@ -1,39 +1,39 @@
 {
   "icon_emoji": ":warning:",
-  "text": ":warning: *Non-compliant found* - Configservice Aggregated Violation Transmitter",
+  "text": ":warning: *Noncompliant resource detected* - Configservice Aggregated Non-compliance Transmitter",
   "attachments": [ {
     "fallback": "",
     "color": "warning",
-    "pretext": "Following has been marked as non-compliant against rule defined by the organization's compliance team",
+    "pretext": "Following Individual has been marked as noncompliant against rule defined by the organization's compliance team",
     "fields": [
       {
-        "title": "account id",
+        "title": "Account",
         "value": "accountId",
         "short": "true"
       },
       {
-        "title": "region",
+        "title": "Region",
         "value": "awsRegion",
         "short": "true"
       },
       {
-        "title": "resource id marked as non-compliant",
+        "title": "Resource ID",
         "value": "configuration.targetResourceId",
         "short": "true"
       },
       {
-        "title": "resource type",
+        "title": "Resource Type",
         "value": "configuration.targetResourceType",
         "short": "true"
       },
       {
-        "title": "rule against",
+        "title": "Rule",
         "value": "<https://awsRegion.console.aws.amazon.com/config/home?region=awsRegion&awsc-custsat-override=promptUser#/rules/rule-details/required-tags|required-tags> - AWS Config Managed rule",
         "short": "true"
       },
       {
-        "title": "remediation",
-        "value": "Associate absent tag to the resource properly",
+        "title": "Remediation",
+        "value": "Associate tag that is absent to the resource properly",
         "short": "true"
       },
       {
