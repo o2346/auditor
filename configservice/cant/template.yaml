@@ -58,10 +58,6 @@ Outputs:
     Description: "Implicit IAM Role created for the function"
     Value: !GetAtt FunctionRole.Arn
 
-#misc
+#FYI misc
 #https://docs.aws.amazon.com/lambda/latest/dg/with-scheduledevents-example-use-app-spec.html
 #
-
-
-#Error: Unable to upload artifact Function referenced by CodeUri parameter of Function resource.
-#An error occurred (AccessDenied) when calling the PutObject operation: Access Denied
