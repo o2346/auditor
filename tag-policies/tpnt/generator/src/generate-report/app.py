@@ -51,7 +51,7 @@ def lambda_handler(event, context):
     #https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/organizations.html#Organizations.Client.list_accounts
 
     #TODO:enable bucket object lifecycle(scheduled auto deletion) for cost saving
-    #Generated CSVs may not be necessary forever
+    #Generated CSVs may not be necessary so long
 
     #Return event for further processing
     return Marshaller.marshall(awsEvent)
