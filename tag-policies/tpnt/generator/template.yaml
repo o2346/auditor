@@ -4,6 +4,14 @@ Description: >
   generator
 
   Sample SAM Template for generator
+Parameters:
+  Bucket:
+    Type: String
+    #Default: !Sub 'arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:vpc/${vpc}'
+    Default: 'Default'
+
+Conditions:
+  IsBucketNameDefalt: !Equals [!Ref Bucket, Default]
 
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
@@ -11,30 +19,28 @@ Globals:
     Timeout: 3
 
 Resources:
-  HelloWorldFunction:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+  PeriodicGenerateReport:
+    Type: AWS::Serverless::Function
     Properties:
-      CodeUri: hello_world_function
-      Handler: hello_world/app.lambda_handler
+      CodeUri: src
+      Handler: generate-report/app.lambda_handler
       Runtime: python3.8
+      Policies:
+        - S3CrudPolicy:
+            BucketName: !If [IsBucketNameDefalt, !Sub "tpnt-generated-reports-${AWS::AccountId}",!Ref Bucket]
       Events:
-        HelloWorld:
-          Type: CloudWatchEvent # More info about CloudWatchEvent Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#cloudwatchevent
+        PeriodicGenerateReport:
+          Type: Schedule
           Properties:
-            #EventBusName: your-event-bus-name #Uncomment this if your events are not on the 'default' event bus
-            Pattern:
-              source:
-                - aws.events
-              detail-type:
-                - Scheduled Event
+            Schedule: rate(1 minute)
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
   # Find out more about other implicit resources you can reference within SAM
   # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
-  HelloWorldFunction:
+  PeriodicGenerateReport:
     Description: "Hello World Lambda Function ARN"
-    Value: !GetAtt HelloWorldFunction.Arn
-  HelloWorldFunctionIamRole:
+    Value: !GetAtt PeriodicGenerateReport.Arn
+  PeriodicGenerateReportIamRole:
     Description: "Implicit IAM Role created for Hello World function"
-    Value: !GetAtt HelloWorldFunctionRole.Arn
+    Value: !GetAtt PeriodicGenerateReportRole.Arn
