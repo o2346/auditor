@@ -27,7 +27,7 @@ Resources:
       Runtime: python3.8
       Policies:
         - S3CrudPolicy:
-            BucketName: !If [IsBucketNameDefalt, !Sub "tpnt-generated-reports-${AWS::AccountId}",!Ref Bucket]
+            BucketName: !If [IsBucketNameDefalt, !Sub "tagpolicies-generated-reports-${AWS::AccountId}",!Ref Bucket]
       Events:
         PeriodicGenerateReport:
           Type: Schedule
