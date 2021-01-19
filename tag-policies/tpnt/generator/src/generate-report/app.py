@@ -4,6 +4,10 @@ from schema.aws.events.scheduledjson import ScheduledEvent
 
 import json
 import os
+import sys
+import boto3
+
+client = boto3.client('resourcegroupstaggingapi')
 
 def lambda_handler(event, context):
     """Sample Lambda function reacting to EventBridge events
@@ -32,8 +36,17 @@ def lambda_handler(event, context):
     #Execute business logic
 
     #Make updates to event payload, if desired
-    awsEvent.detail_type = "HelloWorldFunction updated event of " + awsEvent.detail_type;
-    print(os.environ['BucketName'])
+    awsEvent.detail_type = str(awsEvent);
+    print(os.environ['Bucket'])
+    #https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/resourcegroupstaggingapi.html#ResourceGroupsTaggingAPI.Client.start_report_creation
+    try:
+        response = client.start_report_creation(
+            S3Bucket=os.environ['Bucket']
+        )
+        print(response)
+    except:
+        print(str(sys.exc_info()))
+
 
     #Return event for further processing
     return Marshaller.marshall(awsEvent)

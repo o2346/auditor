@@ -15,7 +15,7 @@ Parameters:
 
 #https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/conditions-sample-templates.html
 Conditions:
-  IsBucketNameDefalt: !Equals [!Ref Bucket, Default]
+  IsBucketDefalt: !Equals [!Ref Bucket, Default]
 
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
@@ -23,7 +23,7 @@ Globals:
     Timeout: 3
     Environment: #https://github.com/aws/aws-sam-cli/issues/1163#issuecomment-514031539
       Variables:
-        BucketName: !If [IsBucketNameDefalt, !Sub "tagpolicies-generated-reports-${AWS::AccountId}",!Ref Bucket]
+        Bucket: !If [IsBucketDefalt, !Sub "tagpolicies-generated-reports-${AWS::AccountId}",!Ref Bucket]
 
 Resources:
   PeriodicGenerateReport:
@@ -34,9 +34,10 @@ Resources:
       Runtime: python3.8
       Policies:
         - S3CrudPolicy:
-            BucketName: !If [IsBucketNameDefalt, !Sub "tagpolicies-generated-reports-${AWS::AccountId}",!Ref Bucket]
+            BucketName: !If [IsBucketDefalt, !Sub "tagpolicies-generated-reports-${AWS::AccountId}",!Ref Bucket]
       Events:
         PeriodicGenerateReport:
+          #https://docs.aws.amazon.com/lambda/latest/dg/with-scheduledevents-example-use-app-spec.html
           Type: Schedule
           Properties:
             Schedule: rate(1 minute)
@@ -51,3 +52,7 @@ Outputs:
   PeriodicGenerateReportIamRole:
     Description: "Implicit IAM Role created for Hello World function"
     Value: !GetAtt PeriodicGenerateReportRole.Arn
+    #https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html
+    #PeriodicGenerateReportPolicy:
+    #  Description: "S3 Bucket generate to"
+    #  Value: !Ref PeriodicGenerateReport.Properties.
