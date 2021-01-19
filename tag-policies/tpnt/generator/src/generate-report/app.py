@@ -47,6 +47,8 @@ def lambda_handler(event, context):
     except:
         print(str(sys.exc_info()))
 
+    #consider following in order to support account names mapping for human friendly
+    #https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/organizations.html#Organizations.Client.list_accounts
 
     #Return event for further processing
     return Marshaller.marshall(awsEvent)
