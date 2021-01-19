@@ -40,6 +40,7 @@ Resources:
           #https://docs.aws.amazon.com/lambda/latest/dg/with-scheduledevents-example-use-app-spec.html
           Type: Schedule
           Properties:
+            #Schedule: rate(24 hours) #https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html#RateExpressions
             Schedule: rate(1 minute)
 
 Outputs:
