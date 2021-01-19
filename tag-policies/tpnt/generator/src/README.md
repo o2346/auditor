@@ -25,3 +25,15 @@ Run Command:
 ```sh
 pip3 install -r requirements.txt
 ```
+
+## local invoke, debug
+
+```bash
+sam build && sam local invoke --parameter-overrides Bucket=tagpolicies-generated-reports-725521117709 --debug -l "$(dirname $(mktemp -u))"/invoke.log
+```
+
+On other terminal,
+
+```bash
+tail -f "$(dirname $(mktemp -u))"/invoke.log
+```
