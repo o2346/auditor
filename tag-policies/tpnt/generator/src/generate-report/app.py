@@ -2,6 +2,8 @@ from schema.aws.events.scheduledjson import Marshaller
 from schema.aws.events.scheduledjson import AWSEvent
 from schema.aws.events.scheduledjson import ScheduledEvent
 
+import json
+import os
 
 def lambda_handler(event, context):
     """Sample Lambda function reacting to EventBridge events
@@ -31,6 +33,7 @@ def lambda_handler(event, context):
 
     #Make updates to event payload, if desired
     awsEvent.detail_type = "HelloWorldFunction updated event of " + awsEvent.detail_type;
+    print(os.environ['BucketName'])
 
     #Return event for further processing
     return Marshaller.marshall(awsEvent)

@@ -9,7 +9,11 @@ Parameters:
     Type: String
     #Default: !Sub 'arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:vpc/${vpc}'
     Default: 'Default'
+    # By default, Manually create one with the name described in 'S3CrudPolicy' below, if you actually wanted to invoke the func and generate report into the bucket.
+    # Be noticed this template assumes the bucket would already exists.
+    # It is not responsible to create the bucket, but the other hand 'transmitter' could instead.
 
+#https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/conditions-sample-templates.html
 Conditions:
   IsBucketNameDefalt: !Equals [!Ref Bucket, Default]
 
@@ -17,6 +21,9 @@ Conditions:
 Globals:
   Function:
     Timeout: 3
+    Environment: #https://github.com/aws/aws-sam-cli/issues/1163#issuecomment-514031539
+      Variables:
+        BucketName: !If [IsBucketNameDefalt, !Sub "tagpolicies-generated-reports-${AWS::AccountId}",!Ref Bucket]
 
 Resources:
   PeriodicGenerateReport:
