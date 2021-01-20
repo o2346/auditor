@@ -4,7 +4,7 @@ Description: >-
   An Amazon S3 trigger that retrieves Tag Policies report for the object that has been
   created.
 
-Parameters:
+Parameters: #https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html
   Bucket:
     Type: String
     #Default: !Sub 'arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:vpc/${vpc}'
@@ -37,6 +37,7 @@ Resources:
       Handler: transmitter/app.lambda_handler
       Runtime: python3.8
       Environment: #https://github.com/aws/aws-sam-cli/issues/1163#issuecomment-514031539
+        #https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-function-environment.html
         Variables:
           BUCKET1: !If [IsBucketDefalt, !Sub "tagpolicies-generated-reports-${AWS::AccountId}",!Ref Bucket]
           BUCKET2: !Sub "tagpolicies-noncompliantonly-reports-${AWS::AccountId}"
@@ -57,14 +58,28 @@ Resources:
             Events:
               - 's3:ObjectCreated:*'
 
+  #https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-property-function-s3.html
+  #https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3-bucket.html
   Bucket1:
     Type: 'AWS::S3::Bucket'
     Properties:
       BucketName: !If [IsBucketDefalt, !Sub "tagpolicies-generated-reports-${AWS::AccountId}",!Ref Bucket]
+      PublicAccessBlockConfiguration: #https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3-bucket-publicaccessblockconfiguration.html
+        BlockPublicAcls: True
+        BlockPublicPolicy: True
+        IgnorePublicAcls: True
+        RestrictPublicBuckets: True
+      #https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/quickref-s3.html
+      #https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3-policy.html
   Bucket2:
     Type: 'AWS::S3::Bucket'
     Properties:
       BucketName: !Sub "tagpolicies-noncompliantonly-reports-${AWS::AccountId}"
+      PublicAccessBlockConfiguration: #https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3-bucket-publicaccessblockconfiguration.html
+        BlockPublicAcls: True
+        BlockPublicPolicy: True
+        IgnorePublicAcls: True
+        RestrictPublicBuckets: True
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
