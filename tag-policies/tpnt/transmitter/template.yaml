@@ -1,40 +1,84 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: >
-  transmitter
+Description: >-
+  An Amazon S3 trigger that retrieves Tag Policies report for the object that has been
+  created.
 
-  Sample SAM Template for transmitter
+Parameters:
+  Bucket:
+    Type: String
+    #Default: !Sub 'arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:vpc/${vpc}'
+    Default: 'Default'
+    # By default, Manually create one with the name described in 'S3CrudPolicy' below, if you actually wanted to invoke the func and generate report into the bucket.
+    # Be noticed this template assumes the bucket would already exists.
+    # It is not responsible to create the bucket, but the other hand 'transmitter' could instead.
+  SendTo:
+    Type: String
+    Default: https://hooks.slack.com/services/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+    Description: Slack WebHook url
+
+#https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/conditions-sample-templates.html
+Conditions:
+  IsBucketDefalt: !Equals [!Ref Bucket, Default]
 
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
     Timeout: 3
+    Environment: #https://github.com/aws/aws-sam-cli/issues/1163#issuecomment-514031539
+      Variables:
+        SENDTO: !Ref SendTo
 
 Resources:
-  HelloWorldFunction:
+  Transmit2SlackTagpoliciesReport:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: hello_world_function
-      Handler: hello_world/app.lambda_handler
+      CodeUri: src
+      Handler: transmitter/app.lambda_handler
       Runtime: python3.8
+      Environment: #https://github.com/aws/aws-sam-cli/issues/1163#issuecomment-514031539
+        Variables:
+          BUCKET1: !If [IsBucketDefalt, !Sub "tagpolicies-generated-reports-${AWS::AccountId}",!Ref Bucket]
+          BUCKET2: !Sub "tagpolicies-noncompliantonly-reports-${AWS::AccountId}"
+      Description: >-
+        An Amazon S3 trigger that retrieves Tag Policies report for the object that has been
+      Policies:
+        #https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-policy-template-list.html#s3-read-policy
+        - S3ReadPolicy:
+            BucketName: !If [IsBucketDefalt, !Sub "tagpolicies-generated-reports-${AWS::AccountId}",!Ref Bucket]
+        - S3WritePolicy:
+            BucketName: !Sub "tagpolicies-noncompliantonly-reports-${AWS::AccountId}"
       Events:
-        HelloWorld:
-          Type: CloudWatchEvent # More info about CloudWatchEvent Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#cloudwatchevent
+        BucketEvent1:
+          Type: S3
           Properties:
-            #EventBusName: your-event-bus-name #Uncomment this if your events are not on the 'default' event bus
-            Pattern:
-              source:
-                - aws.s3
-              detail-type:
-                - AWS API Call via CloudTrail
+            Bucket:
+              Ref: Bucket1
+            Events:
+              - 's3:ObjectCreated:*'
+
+  Bucket1:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: !If [IsBucketDefalt, !Sub "tagpolicies-generated-reports-${AWS::AccountId}",!Ref Bucket]
+  Bucket2:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: !Sub "tagpolicies-noncompliantonly-reports-${AWS::AccountId}"
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
   # Find out more about other implicit resources you can reference within SAM
   # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
-  HelloWorldFunction:
-    Description: "Hello World Lambda Function ARN"
-    Value: !GetAtt HelloWorldFunction.Arn
-  HelloWorldFunctionIamRole:
-    Description: "Implicit IAM Role created for Hello World function"
-    Value: !GetAtt HelloWorldFunctionRole.Arn
+  Transmit2SlackTagpoliciesReport:
+    Description: "Main Lambda Function ARN"
+    Value: !GetAtt Transmit2SlackTagpoliciesReport.Arn
+  Transmit2SlackTagpoliciesReportIamRole:
+    Description: "Implicit IAM Role created for Main function"
+    Value: !GetAtt Transmit2SlackTagpoliciesReportRole.Arn
+  Bucket1:
+    Description: "Where initial source report stored at, from Tag Policies report generation on Organizations Master Account"
+    Value: !GetAtt Bucket1.Arn
+  Bucket2:
+    Description: "Where a report that filtered out for only noncompliant items would be saved at"
+    Value: !GetAtt Bucket2.Arn
