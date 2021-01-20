@@ -9,13 +9,14 @@
 #Assuming such a bucket already exists
 
 cd $(dirname $0)
+#pwd && exit 0
 
 readonly your_org_id="$(aws organizations describe-organization --query 'Organization.Id' --output text)"
 
 if [ -n "$1" ]; then
   readonly your_bucket_name=$1
 else
-  readonly your_bucket_name="$(aws s3 ls | grep 'tagpolicies-generated-reports-' | head -n1 | awk '{print $NF}')"
+  readonly your_bucket_name="tagpolicies-generated-reports-`aws sts get-caller-identity --query Account --output text`"
 fi
 
 cat ./bucket-policy-template.json |

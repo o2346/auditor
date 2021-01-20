@@ -12,7 +12,7 @@ bucketif: ## Make bucket if absent
 rbif: ## Forcibly remove bucket if present
 	@aws s3 ls | grep "$(bucket_name)" && aws s3 rb --force s3://$(bucket_name)
 
-put_bucket_policy: ##
+put_bucket_policy: ## https://docs.aws.amazon.com/ARG/latest/userguide/tag-policies-prereqs.html#bucket-policy
 	-@make -s bucketif
 	@mkdir -p .user_cache
 	@../s3bucket/generate-bucekt-policy.sh $(bucket_name) | tee .user_cache/.bucket_policy_$(bucket_name).json
