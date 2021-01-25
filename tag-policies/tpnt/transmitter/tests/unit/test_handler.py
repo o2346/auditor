@@ -45,13 +45,14 @@ def test_lambda_handler(eventBridgeEvent, mocker):
 def test_filter_noncompliants(eventBridgeEvent, mocker):
 #    for p in sys.path:
 #        print(p)
-#/home/o2/Documents/tagging-discipline/tag-policies/tpnt/transmitter/src/transmitter/localmoc/report.csv
     csvpath = os.path.join(os.environ['src'],'transmitter','localmoc','report.csv')
     print(csvpath)
     with open(csvpath, newline='') as csvfile:
+        #https://docs.python.org/3/library/csv.html#reader-objects
         reader = csv.DictReader(csvfile, delimiter=',')
-        print(len([dict(d) for d in reader]))
-        ret = app.filter_noncompliants(reader)
+        #print(len([dict(d) for d in reader]))
+        #https://stackoverflow.com/questions/47115041/read-from-csv-into-a-list-with-dictreader
+        ret = app.filter_noncompliants([dict(d) for d in reader])
 #        for row in reader:
 #            print(row['AccountId'])
     #https://alexharv074.github.io/2019/03/02/introduction-to-sam-part-i-using-the-sam-cli.html

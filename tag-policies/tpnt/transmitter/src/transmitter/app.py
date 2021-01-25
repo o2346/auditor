@@ -9,7 +9,10 @@ import json
 #str(os.environ['LAMBDA_TASK_ROOT'] + "/function/summarytemplates/" + configRuleName + '.json')
 
 def filter_noncompliants(csv):
-    return 0
+    #https://www.geeksforgeeks.org/filter-in-python/
+    result = filter(lambda x: x['ComplianceStatus'] == 'false', csv)
+    #print(len(list(result)))
+    return list(result)
 
 def lambda_handler(event, context):
     """Sample Lambda function reacting to EventBridge events
@@ -36,6 +39,8 @@ def lambda_handler(event, context):
     detail:AWSAPICallViaCloudTrail = awsEvent.detail
 
     #Execute business logic
+
+    #https://stackoverflow.com/questions/42312196/how-do-i-read-a-csv-stored-in-s3-with-csv-dictreader
 
     #Make updates to event payload, if desired
     #awsEvent.detail_type = "HelloWorldFunction updated event of " + awsEvent.detail_type;
