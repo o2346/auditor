@@ -1,4 +1,6 @@
 import pytest
+#https://docs.pytest.org/en/stable/assert.html
+#https://alexharv074.github.io/2019/03/02/introduction-to-sam-part-i-using-the-sam-cli.html
 
 from schema.aws.s3.awsapicallviacloudtrail import AWSEvent
 from schema.aws.s3.awsapicallviacloudtrail import AWSAPICallViaCloudTrail
