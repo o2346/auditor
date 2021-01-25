@@ -1,9 +1,9 @@
 import pytest
 
-from hello_world import app
 from schema.aws.s3.awsapicallviacloudtrail import AWSEvent
 from schema.aws.s3.awsapicallviacloudtrail import AWSAPICallViaCloudTrail
 from schema.aws.s3.awsapicallviacloudtrail import Marshaller
+from transmitter import app
 
 @pytest.fixture()
 def eventBridgeEvent():
