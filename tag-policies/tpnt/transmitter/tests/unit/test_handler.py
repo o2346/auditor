@@ -9,6 +9,7 @@ import os
 import sys
 import boto3
 import json
+import csv
 
 @pytest.fixture()
 def eventBridgeEvent():
@@ -42,7 +43,17 @@ def test_lambda_handler(eventBridgeEvent, mocker):
     assert True
 
 def test_filter_noncompliants(eventBridgeEvent, mocker):
-    ret = app.filter_noncompliants('aaa')
+#    for p in sys.path:
+#        print(p)
+#/home/o2/Documents/tagging-discipline/tag-policies/tpnt/transmitter/src/transmitter/localmoc/report.csv
+    csvpath = os.path.join(os.environ['src'],'transmitter','localmoc','report.csv')
+    print(csvpath)
+    with open(csvpath, newline='') as csvfile:
+        reader = csv.DictReader(csvfile, delimiter=',')
+        print(len([dict(d) for d in reader]))
+        ret = app.filter_noncompliants(reader)
+#        for row in reader:
+#            print(row['AccountId'])
     #https://alexharv074.github.io/2019/03/02/introduction-to-sam-part-i-using-the-sam-cli.html
     #https://docs.pytest.org/en/stable/assert.html
-    assert ret == 0
+    assert len(ret) == 1
