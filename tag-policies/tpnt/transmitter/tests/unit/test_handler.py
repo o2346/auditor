@@ -39,6 +39,9 @@ def test_lambda_handler(eventBridgeEvent, mocker):
     detailRet:AWSAPICallViaCloudTrail = awsEventRet.detail
 
     #assert awsEventRet.detail_type.startswith("HelloWorldFunction updated event of ")
+    assert True
+
+def test_aaa(eventBridgeEvent, mocker):
     #https://alexharv074.github.io/2019/03/02/introduction-to-sam-part-i-using-the-sam-cli.html
     #https://docs.pytest.org/en/stable/assert.html
     assert True
