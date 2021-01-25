@@ -2,7 +2,11 @@ from schema.aws.s3.awsapicallviacloudtrail import Marshaller
 from schema.aws.s3.awsapicallviacloudtrail import AWSEvent
 from schema.aws.s3.awsapicallviacloudtrail import AWSAPICallViaCloudTrail
 
+import os
+import sys
+import boto3
 import json
+#str(os.environ['LAMBDA_TASK_ROOT'] + "/function/summarytemplates/" + configRuleName + '.json')
 
 def lambda_handler(event, context):
     """Sample Lambda function reacting to EventBridge events
@@ -33,5 +37,6 @@ def lambda_handler(event, context):
     #Make updates to event payload, if desired
     #awsEvent.detail_type = "HelloWorldFunction updated event of " + awsEvent.detail_type;
     print(json.dumps(event))
+    print(os.environ['SENDTO'])
     #Return event for further processing
     return Marshaller.marshall(awsEvent)
