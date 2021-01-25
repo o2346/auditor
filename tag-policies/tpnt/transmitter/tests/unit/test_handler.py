@@ -41,7 +41,8 @@ def test_lambda_handler(eventBridgeEvent, mocker):
     #assert awsEventRet.detail_type.startswith("HelloWorldFunction updated event of ")
     assert True
 
-def test_aaa(eventBridgeEvent, mocker):
+def test_filter_noncompliants(eventBridgeEvent, mocker):
+    ret = app.filter_noncompliants('aaa')
     #https://alexharv074.github.io/2019/03/02/introduction-to-sam-part-i-using-the-sam-cli.html
     #https://docs.pytest.org/en/stable/assert.html
-    assert True
+    assert ret == 0

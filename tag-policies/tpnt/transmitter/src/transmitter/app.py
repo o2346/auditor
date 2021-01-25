@@ -8,6 +8,9 @@ import boto3
 import json
 #str(os.environ['LAMBDA_TASK_ROOT'] + "/function/summarytemplates/" + configRuleName + '.json')
 
+def filter_noncompliants(csv):
+    return 0
+
 def lambda_handler(event, context):
     """Sample Lambda function reacting to EventBridge events
 
