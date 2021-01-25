@@ -36,8 +36,7 @@ undeploy: ## delete stack
 	@aws cloudformation delete-stack --stack-name tpnt-transmitter
 
 test: ## print test message
-	@echo $(bucket_name)
-	@echo $(SHELL)
+	@python3 -m pytest tests/ -v
 
 help: ## print about the targets
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-16s\033[0m %s\n", $$1, $$2}'
