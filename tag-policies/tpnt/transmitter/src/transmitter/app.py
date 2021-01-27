@@ -7,7 +7,6 @@ import sys
 import boto3
 import json
 import csv
-#str(os.environ['LAMBDA_TASK_ROOT'] + "/function/summarytemplates/" + configRuleName + '.json')
 
 def filter_noncompliants(csv):
     #https://www.geeksforgeeks.org/filter-in-python/
@@ -17,16 +16,25 @@ def filter_noncompliants(csv):
 
 def get_dictdata(event):
     parent = event['Records'][0]['s3']['bucket']['name']
+    if hasattr(os.environ, 'LAMBDA_TASK_ROOT'):
+        local_csvpath = os.path.join(os.environ['LAMBDA_TASK_ROOT'],'localmoc','report.csv')
+    else:
+        local_csvpath = os.path.join(os.environ['src'],'transmitter','localmoc','report.csv')
+
     if parent == 'localmoc':
-        csvpath = os.path.join(os.environ['src'],'transmitter','localmoc','report.csv')
-        print(csvpath)
-        with open(csvpath, newline='') as csvfile:
+        local_csvpath = os.path.join(os.environ['src'],'transmitter','localmoc','report.csv')
+        print(local_csvpath)
+        with open(local_csvpath, newline='') as csvfile:
             #https://docs.python.org/3/library/csv.html#reader-objects
             reader = csv.DictReader(csvfile, delimiter=',')
             ret = [dict(d) for d in reader]
             #print(len([dict(d) for d in reader]))
 
             #https://stackoverflow.com/questions/47115041/read-from-csv-into-a-list-with-dictreader
+    else:
+        #str(os.environ['LAMBDA_TASK_ROOT'] + "/function/summarytemplates/" + configRuleName + '.json')
+        #https://github.com/amazon-archives/serverless-app-examples/blob/master/python/s3-get-object-python/lambda_function.py
+        ret = []
     return ret
 
 def lambda_handler(event, context):
