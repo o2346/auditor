@@ -66,5 +66,7 @@ def test_filter_noncompliants(eventBridgeEvent, mocker):
     assert len(ret) == 1
 
 def test_get_dictdata(eventBridgeEvent, mocker):
-    print(eventBridgeEvent)
-    assert False
+    #print(eventBridgeEvent)
+    ret = app.get_dictdata(eventBridgeEvent)
+    #print(ret)
+    assert ret[0]['AccountId'] == '111111111111'

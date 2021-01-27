@@ -6,6 +6,7 @@ import os
 import sys
 import boto3
 import json
+import csv
 #str(os.environ['LAMBDA_TASK_ROOT'] + "/function/summarytemplates/" + configRuleName + '.json')
 
 def filter_noncompliants(csv):
@@ -15,16 +16,18 @@ def filter_noncompliants(csv):
     return list(result)
 
 def get_dictdata(event):
-    parent = event['s3']['bucket']['name']
+    parent = event['Records'][0]['s3']['bucket']['name']
     if parent == 'localmoc':
         csvpath = os.path.join(os.environ['src'],'transmitter','localmoc','report.csv')
         print(csvpath)
         with open(csvpath, newline='') as csvfile:
             #https://docs.python.org/3/library/csv.html#reader-objects
             reader = csv.DictReader(csvfile, delimiter=',')
+            ret = [dict(d) for d in reader]
             #print(len([dict(d) for d in reader]))
+
             #https://stackoverflow.com/questions/47115041/read-from-csv-into-a-list-with-dictreader
-    return [dict(d) for d in reader]
+    return ret
 
 def lambda_handler(event, context):
     """Sample Lambda function reacting to EventBridge events
