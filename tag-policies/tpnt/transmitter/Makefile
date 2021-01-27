@@ -38,11 +38,16 @@ undeploy: ## delete stack
 test: ## print test message
 	@python3 -m pytest tests/ -v
 
+#FYI
+#https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/building-custom-runtimes.html
+#https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-build.html
+
 help: ## print about the targets
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-16s\033[0m %s\n", $$1, $$2}'
 #.DEFAULT_GOAL := help
 # https://postd.cc/auto-documented-makefile/
 # https://www.gnu.org/software/make/manual/make.html#Standard-Targets
+#
 
 #https://kanasys.com/tech/522
 ##!/bin/bash
