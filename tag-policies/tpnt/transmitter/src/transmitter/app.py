@@ -14,6 +14,18 @@ def filter_noncompliants(csv):
     #print(len(list(result)))
     return list(result)
 
+def get_dictdata(event):
+    parent = event['s3']['bucket']['name']
+    if parent == 'localmoc':
+        csvpath = os.path.join(os.environ['src'],'transmitter','localmoc','report.csv')
+        print(csvpath)
+        with open(csvpath, newline='') as csvfile:
+            #https://docs.python.org/3/library/csv.html#reader-objects
+            reader = csv.DictReader(csvfile, delimiter=',')
+            #print(len([dict(d) for d in reader]))
+            #https://stackoverflow.com/questions/47115041/read-from-csv-into-a-list-with-dictreader
+    return [dict(d) for d in reader]
+
 def lambda_handler(event, context):
     """Sample Lambda function reacting to EventBridge events
 
