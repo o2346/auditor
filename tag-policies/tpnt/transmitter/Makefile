@@ -12,7 +12,8 @@ bucketif: ## Make bucket if absent
 	@aws s3 ls | grep "$(bucket1_name)" || aws s3 mb s3://$(bucket1_name)
 
 rbif: ## Forcibly remove bucket if present
-	@aws s3 ls | grep "$(bucket1_name)" && aws s3 rb --force s3://$(bucket1_name)
+	-@aws s3 ls | grep "$(bucket1_name)" && aws s3 rb --force s3://$(bucket1_name)
+	-@aws s3 ls | grep "$(bucket2_name)" && aws s3 rb --force s3://$(bucket2_name)
 
 put_bucket_policy: ## https://docs.aws.amazon.com/ARG/latest/userguide/tag-policies-prereqs.html#bucket-policy
 	-@make -s bucketif

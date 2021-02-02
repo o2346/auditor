@@ -8,6 +8,7 @@ import sys
 import boto3
 import json
 import csv
+import urllib
 
 s3 = boto3.client('s3')
 
@@ -46,9 +47,27 @@ def get_dictdata(event):
     else:
         #in case of production
         #str(os.environ['LAMBDA_TASK_ROOT'] + "/function/summarytemplates/" + configRuleName + '.json')
-        #https://github.com/amazon-archives/serverless-app-examples/blob/master/python/s3-get-object-python/lambda_function.py
         #https://stackoverflow.com/questions/42312196/how-do-i-read-a-csv-stored-in-s3-with-csv-dictreader
-        ret = []
+        #https://docs.aws.amazon.com/lambda/latest/dg/with-s3-example-deployment-pkg.html#with-s3-example-deployment-pkg-python
+        key = urllib.parse.unquote_plus(event['Records'][0]['s3']['object']['key'])
+        #key = event['Records'][0]['s3']['object']['key'].encode('utf8')
+        try:
+            response = s3.get_object(Bucket=parent, Key=key)
+            # for python 3 you need to decode the incoming bytes:
+            lines = response['Body'].read().decode('utf-8').split()
+            reader = csv.DictReader(lines)
+            ret = [dict(d) for d in reader]
+            # now iterate over those lines
+            #for row in csv.DictReader(lines):
+                # here you get a sequence of dicts
+                # do whatever you want with each line here
+                #print(row)
+            #print("CONTENT TYPE: " + response['ContentType'])
+            #return response['ContentType']
+        except Exception as e:
+            print(e)
+            print('Error getting object {} from bucket {}. Make sure they exist and your bucket is in the same region as this function.'.format(key, bucket))
+            raise e
     return ret
 
 def lambda_handler(event, context):
@@ -77,9 +96,6 @@ def lambda_handler(event, context):
 
     #Execute business logic
 
-
-    #Make updates to event payload, if desired
-
     #print(json.dumps(event))
     #print(os.environ['SENDTO'])
     noncompliants = filter_noncompliants(get_dictdata(event))
@@ -89,11 +105,21 @@ def lambda_handler(event, context):
     writer.writeheader()
     writer.writerows(noncompliants)
 
-    print(output.getvalue())
     print(os.environ['BUCKET1'])
     print(os.environ['BUCKET2'])
+    response = s3.put_object(
+        Body=output.getvalue(), #https://dev.classmethod.jp/articles/upload-json-directry-to-s3-with-python-boto3/
+        Bucket=os.environ['BUCKET2'],
+        Key=urllib.parse.unquote_plus(event['Records'][0]['s3']['object']['key'])
+    )
+
+    print(response)
+    #print(output.getvalue())
+    #print(os.environ['BUCKET1'])
+    #print(os.environ['BUCKET2'])
     print(os.environ['SENDTO'])
 
+    #Make updates to event payload, if desired
     awsEvent.detail_type = "Successful"
     #Return event for further processing
     return Marshaller.marshall(awsEvent)
