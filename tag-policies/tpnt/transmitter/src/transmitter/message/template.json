@@ -1,38 +1,42 @@
 {
   "icon_emoji": ":warning:",
-  "text": ":warning: *Summary* - Configservice Aggregated Non-compliance Transmitter",
+  "text": ":warning: *Non-compliant resources* - Tag Policies Non-compliance Transmitter",
   "attachments": [ {
     "fallback": "",
     "color": "#7B7D7D",
-    "pretext": "Those were marked as non-compliant against rule defined by the organization's compliance team",
+    "pretext": "Download a report below to review resources marked as non-compliant against Tag Policies defined by the organization's compliance team",
     "fields": [
       {
-        "title": "Account NonCompliantResourcesCount",
-        "value": "value.ViolationCountsByAccount"
+        "title": "S3Bucket",
+        "value": "value.S3Bucket"
       },
       {
-        "title": "Totalling among the accounts",
+        "title": "S3ObjectKey",
+        "value": "value.S3Object"
+      },
+      {
+        "title": "Number of non-compliants",
         "value": "value.Totalling",
         "short": "true"
       },
       {
-        "title": "Rule",
-        "value": "<https://docs.aws.amazon.com/config/latest/developerguide/required-tags.html|required-tags> - AWS Config Managed rule",
+        "title": "Policy Type",
+        "value": "<https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_tag-policies.html|Tag Policies> - AWS Organizations",
         "short": "true"
       },
       {
-        "title": "Note",
-        "value": "value.toomanyMsg"
+        "title": "Download instruction(CLI)",
+        "value": "`aws s3 cp s3://value.S3Bucket/value.S3Object $(dirname $(mktemp -u))/noncompliants.csv`"
+      },
+      {
+        "title": "Download instruction(CLI) Note",
+        "value": "Make sure to obtain proper credential of Audit account(may refer to Compliance accunt) which owns the S3 bucket. Since the one was in charge of this, he is supposet be granted necessary permissions."
       }
     ],
     "props": {
-      "rvt": {
-        "configservice": {
-          "rule": {
-            "configRuleName": "required-tags",
-            "identifier": "REQUIRED_TAGS",
-            "is-managed": "true"
-          }
+      "tpnt": {
+        "organizations": {
+          "policy-type": "tag-policies"
         }
       }
     }

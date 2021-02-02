@@ -9,6 +9,11 @@ import boto3
 import json
 import csv
 import urllib
+import re
+import functools
+
+import urllib3
+http = urllib3.PoolManager()
 
 s3 = boto3.client('s3')
 
@@ -98,6 +103,15 @@ def lambda_handler(event, context):
 
     #print(json.dumps(event))
     #print(os.environ['SENDTO'])
+    noncompliantsCount = len(filter_noncompliants(get_dictdata(event)))
+    print(noncompliantsCount)
+
+    if noncompliantsCount == 0:
+        #Make updates to event payload, if desired
+        awsEvent.detail_type = "Successful. 0 Non-compliant resources found, Congratulations. Abort"
+        #Return event for further processing
+        return Marshaller.marshall(awsEvent)
+
     noncompliants = filter_noncompliants(get_dictdata(event))
     #https://stackoverflow.com/questions/61466934/convert-list-of-dict-to-csv-string-using-dict-keys
     output = io.StringIO()
@@ -110,16 +124,37 @@ def lambda_handler(event, context):
     response = s3.put_object(
         Body=output.getvalue(), #https://dev.classmethod.jp/articles/upload-json-directry-to-s3-with-python-boto3/
         Bucket=os.environ['BUCKET2'],
-        Key=urllib.parse.unquote_plus(event['Records'][0]['s3']['object']['key'])
+        Key='noncompliants.csv'
     )
 
     print(response)
+
+    #
+    #Generate and Send message
+    #
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    template_location = os.path.join(current_dir,'message','template.json')
+    print(template_location)
+    with open(template_location, 'r') as messate_template_file:
+        message_template = json.dumps(json.load(messate_template_file))
+
+    noncompliantsReportMapping = [
+        message_template,
+        [ 'value.S3Bucket', os.environ['BUCKET2'] ],
+        [ 'value.Totalling', noncompliantsCount ],
+        [ 'value.S3Object', 'noncompliants.csv' ]
+    ]
+
+    message_json = json.loads(functools.reduce(lambda a,b :re.sub(b[0], str(b[1]), a) ,noncompliantsReportMapping))
+    encoded_msg = json.dumps(message_json).encode('utf-8')
+    response = http.request('POST',os.environ['SENDTO'], body=encoded_msg)
     #print(output.getvalue())
     #print(os.environ['BUCKET1'])
     #print(os.environ['BUCKET2'])
+    print(str(response))
     print(os.environ['SENDTO'])
 
     #Make updates to event payload, if desired
-    awsEvent.detail_type = "Successful"
+    awsEvent.detail_type = "Successful. Non-compliant resources found and Message sent"
     #Return event for further processing
     return Marshaller.marshall(awsEvent)
