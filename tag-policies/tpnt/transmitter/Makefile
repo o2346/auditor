@@ -36,6 +36,7 @@ deploy: ## create stack in samcli
 	@make -s put_bucket_policy
 
 undeploy: ## delete stack
+	-@make -s rbif
 	@aws cloudformation delete-stack --stack-name tpnt-transmitter
 
 test: ## print test message
