@@ -82,6 +82,7 @@ def lambda_handler(event, context):
     s3 = boto3.client('s3')
     print(os.environ['BUCKET1'])
     print(os.environ['BUCKET2'])
+    print(os.environ['SENDTO'])
 
     #Return event for further processing
     return Marshaller.marshall(awsEvent)

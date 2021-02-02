@@ -5,13 +5,17 @@ Description: >-
   created.
 
 Parameters: #https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html
-  Bucket:
+  Bucket1Name:
     Type: String
     #Default: !Sub 'arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:vpc/${vpc}'
     Default: 'Default'
     # By default, Manually create one with the name described in 'S3CrudPolicy' below, if you actually wanted to invoke the func and generate report into the bucket.
     # Be noticed this template assumes the bucket would already exists.
     # It is not responsible to create the bucket, but the other hand 'transmitter' could instead.
+  Bucket2Name:
+    Type: String
+    #Default: !Sub 'arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:vpc/${vpc}'
+    Default: 'Default'
   SendTo:
     Type: String
     Default: https://hooks.slack.com/services/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -19,7 +23,8 @@ Parameters: #https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/para
 
 #https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/conditions-sample-templates.html
 Conditions:
-  IsBucketDefalt: !Equals [!Ref Bucket, Default]
+  IsBucket1Defalt: !Equals [!Ref Bucket1Name, Default]
+  IsBucket2Defalt: !Equals [!Ref Bucket2Name, Default]
 
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
@@ -39,14 +44,14 @@ Resources:
       Environment: #https://github.com/aws/aws-sam-cli/issues/1163#issuecomment-514031539
         #https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-function-environment.html
         Variables:
-          BUCKET1: !If [IsBucketDefalt, !Sub "tagpolicies-generated-reports-${AWS::AccountId}",!Ref Bucket]
-          BUCKET2: !Sub "tagpolicies-noncompliantonly-reports-${AWS::AccountId}"
+          BUCKET1: !If [IsBucket1Defalt, !Sub "tagpolicies-generated-reports-${AWS::AccountId}",!Ref Bucket1Name]
+          BUCKET2: !If [IsBucket2Defalt, !Sub "tagpolicies-noncompliantonly-reports--${AWS::AccountId}",!Ref Bucket2Name]
       Description: >-
         An Amazon S3 trigger that retrieves Tag Policies report for the object that has been
       Policies:
         #https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-policy-template-list.html#s3-read-policy
         - S3ReadPolicy:
-            BucketName: !If [IsBucketDefalt, !Sub "tagpolicies-generated-reports-${AWS::AccountId}",!Ref Bucket]
+            BucketName: !If [IsBucket1Defalt, !Sub "tagpolicies-generated-reports-${AWS::AccountId}",!Ref Bucket1Name]
         - S3WritePolicy:
             BucketName: !Sub "tagpolicies-noncompliantonly-reports-${AWS::AccountId}"
       Events:
@@ -63,7 +68,7 @@ Resources:
   Bucket1:
     Type: 'AWS::S3::Bucket'
     Properties:
-      BucketName: !If [IsBucketDefalt, !Sub "tagpolicies-generated-reports-${AWS::AccountId}",!Ref Bucket]
+      BucketName: !If [IsBucket1Defalt, !Sub "tagpolicies-generated-reports-${AWS::AccountId}",!Ref Bucket1Name]
       PublicAccessBlockConfiguration: #https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3-bucket-publicaccessblockconfiguration.html
         BlockPublicAcls: True
         BlockPublicPolicy: True
