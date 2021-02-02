@@ -1,0 +1,40 @@
+{
+  "icon_emoji": ":warning:",
+  "text": ":warning: *Summary* - Configservice Aggregated Non-compliance Transmitter",
+  "attachments": [ {
+    "fallback": "",
+    "color": "#7B7D7D",
+    "pretext": "Those were marked as non-compliant against rule defined by the organization's compliance team",
+    "fields": [
+      {
+        "title": "Account NonCompliantResourcesCount",
+        "value": "value.ViolationCountsByAccount"
+      },
+      {
+        "title": "Totalling among the accounts",
+        "value": "value.Totalling",
+        "short": "true"
+      },
+      {
+        "title": "Rule",
+        "value": "<https://docs.aws.amazon.com/config/latest/developerguide/required-tags.html|required-tags> - AWS Config Managed rule",
+        "short": "true"
+      },
+      {
+        "title": "Note",
+        "value": "value.toomanyMsg"
+      }
+    ],
+    "props": {
+      "rvt": {
+        "configservice": {
+          "rule": {
+            "configRuleName": "required-tags",
+            "identifier": "REQUIRED_TAGS",
+            "is-managed": "true"
+          }
+        }
+      }
+    }
+  } ]
+}
