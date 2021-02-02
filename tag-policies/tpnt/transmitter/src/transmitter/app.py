@@ -18,15 +18,18 @@ def filter_noncompliants(csv):
 #Obtain CSV accordingly, and parse it(csv named column in 1st row) into dict data
 def get_dictdata(event):
     parent = event['Records'][0]['s3']['bucket']['name']
-    if hasattr(os.environ, 'LAMBDA_TASK_ROOT'):
-        #at local invoking
-        local_csvpath = os.path.join(os.environ['LAMBDA_TASK_ROOT'],'localmoc','report.csv')
-    else:
-        #at unit testing
-        local_csvpath = os.path.join(os.environ['src'],'transmitter','localmoc','report.csv')
+    #if hasattr(os.environ, 'LAMBDA_TASK_ROOT'):
+    #    #at local invoking
+    #    current_dir = os.path.dirname(os.path.abspath(__file__))
+    #    local_csvpath = os.path.join(current_dir,'localmoc','report.csv')
+    #else:
+    #    #at unit testing
+    #    local_csvpath = os.path.join(os.environ['src'],'transmitter','localmoc','report.csv')
 
     if parent == 'localmoc':
         #most in case of development
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        local_csvpath = os.path.join(current_dir,'localmoc','report.csv')
         print(local_csvpath)
         with open(local_csvpath, newline='') as csvfile:
             #https://docs.python.org/3/library/csv.html#reader-objects
@@ -75,9 +78,10 @@ def lambda_handler(event, context):
 
     #print(json.dumps(event))
     #print(os.environ['SENDTO'])
-    noncompliants = get_dictdata(event)
+    noncompliants = filter_noncompliants(get_dictdata(event))
     s3 = boto3.client('s3')
-    #os.environ['BUCKET2']
+    print(os.environ['BUCKET1'])
+    print(os.environ['BUCKET2'])
 
     #Return event for further processing
     return Marshaller.marshall(awsEvent)
