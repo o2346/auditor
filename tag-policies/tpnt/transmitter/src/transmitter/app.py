@@ -3,10 +3,13 @@ from schema.aws.s3.awsapicallviacloudtrail import AWSEvent
 from schema.aws.s3.awsapicallviacloudtrail import AWSAPICallViaCloudTrail
 
 import os
+import io
 import sys
 import boto3
 import json
 import csv
+
+s3 = boto3.client('s3')
 
 # return only items marked as noncompliant
 def filter_noncompliants(csv):
@@ -18,6 +21,7 @@ def filter_noncompliants(csv):
 #Obtain CSV accordingly, and parse it(csv named column in 1st row) into dict data
 def get_dictdata(event):
     parent = event['Records'][0]['s3']['bucket']['name']
+    #https://stackoverflow.com/questions/9748678/which-is-the-best-way-to-check-for-the-existence-of-an-attribute
     #if hasattr(os.environ, 'LAMBDA_TASK_ROOT'):
     #    #at local invoking
     #    current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -28,6 +32,7 @@ def get_dictdata(event):
 
     if parent == 'localmoc':
         #most in case of development
+        #https://stackoverflow.com/questions/30218802/get-parent-of-current-directory-from-python-script
         current_dir = os.path.dirname(os.path.abspath(__file__))
         local_csvpath = os.path.join(current_dir,'localmoc','report.csv')
         print(local_csvpath)
@@ -79,7 +84,13 @@ def lambda_handler(event, context):
     #print(json.dumps(event))
     #print(os.environ['SENDTO'])
     noncompliants = filter_noncompliants(get_dictdata(event))
-    s3 = boto3.client('s3')
+    #https://stackoverflow.com/questions/61466934/convert-list-of-dict-to-csv-string-using-dict-keys
+    output = io.StringIO()
+    writer = csv.DictWriter(output, fieldnames=noncompliants[0].keys())
+    writer.writeheader()
+    writer.writerows(noncompliants)
+
+    print(output.getvalue())
     print(os.environ['BUCKET1'])
     print(os.environ['BUCKET2'])
     print(os.environ['SENDTO'])
