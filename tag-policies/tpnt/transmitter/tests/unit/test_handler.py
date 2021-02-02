@@ -47,8 +47,8 @@ def test_lambda_handler(eventBridgeEvent, mocker):
     awsEventRet:AWSEvent = Marshaller.unmarshall(ret, AWSEvent)
     detailRet:AWSAPICallViaCloudTrail = awsEventRet.detail
 
-    #assert awsEventRet.detail_type.startswith("HelloWorldFunction updated event of ")
-    assert True
+    assert awsEventRet.detail_type.startswith("Successful")
+    #assert True
 
 def test_filter_noncompliants(eventBridgeEvent, mocker):
 #    for p in sys.path:

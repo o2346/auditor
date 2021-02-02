@@ -79,7 +79,6 @@ def lambda_handler(event, context):
 
 
     #Make updates to event payload, if desired
-    #awsEvent.detail_type = "HelloWorldFunction updated event of " + awsEvent.detail_type;
 
     #print(json.dumps(event))
     #print(os.environ['SENDTO'])
@@ -95,5 +94,6 @@ def lambda_handler(event, context):
     print(os.environ['BUCKET2'])
     print(os.environ['SENDTO'])
 
+    awsEvent.detail_type = "Successful"
     #Return event for further processing
     return Marshaller.marshall(awsEvent)
