@@ -33,7 +33,7 @@ local_invoke: ## sam local invoke
 deploy: ## create stack in samcli
 #	-@make -s rbif
 	@sam build
-	@sam deploy --resolve-s3
+	@sam deploy --resolve-s3 --parameter-overrides 'SendTo=$(sendto)'
 	@make -s put_bucket_policy
 
 undeploy: ## delete stack
