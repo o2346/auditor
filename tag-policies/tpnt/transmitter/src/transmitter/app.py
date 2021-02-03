@@ -121,6 +121,10 @@ def lambda_handler(event, context):
 
     print(os.environ['BUCKET1'])
     print(os.environ['BUCKET2'])
+
+    if os.environ['testing'] == 'True':
+        awsEvent.detail_type = "Successful. Ommiting further tasks since it's merely for unit testing"
+        return Marshaller.marshall(awsEvent)
     #https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/s3.html#S3.Client.put_object
     response = s3.put_object(
         Body=output.getvalue(), #https://dev.classmethod.jp/articles/upload-json-directry-to-s3-with-python-boto3/

@@ -42,6 +42,7 @@ def test_lambda_handler(eventBridgeEvent, mocker):
     os.environ['SENDTO'] = 'Jone Due'
     os.environ['BUCKET1'] = 'dummybucket1'
     os.environ['BUCKET2'] = 'dummybucket2'
+    os.environ['testing'] = 'True'
     ret = app.lambda_handler(eventBridgeEvent, "")
 
     awsEventRet:AWSEvent = Marshaller.unmarshall(ret, AWSEvent)
