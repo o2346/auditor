@@ -34,7 +34,8 @@ deploy: ## create stack in samcli
 
 undeploy: ## delete stack
 	-@make -s rbif
-	@aws cloudformation delete-stack --stack-name tpnt-transmitter
+	@aws cloudformation delete-stack --stack-name `cat samconfig.toml | grep -E '^stack_name' | awk '{print $$NF}' | tr -d '"'`
+#	@aws cloudformation delete-stack --stack-name tpnt-transmitter
 
 test: ## print test message
 	@python3 -m pytest tests/ -v
