@@ -21,10 +21,6 @@ put_bucket_policy: ## https://docs.aws.amazon.com/ARG/latest/userguide/tag-polic
 	@../s3bucket/generate-bucekt-policy.sh $(bucket1_name) | tee .user_cache/.bucket_policy_$(bucket1_name).json
 	@aws s3api put-bucket-policy --bucket $(bucket1_name) --policy file://.user_cache/.bucket_policy_$(bucket1_name).json
 
-#put_sample_csv: ## put sample.report.csv to $(bucket1_name)
-#	-@make -s bucketif
-#	@aws s3 cp ./events/sample.report.csv s3://$(bucket1_name)/sample.report.csv
-
 local_invoke: ## sam local invoke
 	@echo $(bucket1_name)
 	@sam build
@@ -42,6 +38,10 @@ undeploy: ## delete stack
 
 test: ## print test message
 	@python3 -m pytest tests/ -v
+
+test_upload_csv: ## Upload sample csv to the S3 Bucket to confirm the Lambda function works
+	@echo $(bucket1_name)
+	@aws s3 cp ./src/function/localmoc/report.csv s3://$(bucket1_name)/sample.report.csv
 
 #FYI
 #https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/building-custom-runtimes.html
