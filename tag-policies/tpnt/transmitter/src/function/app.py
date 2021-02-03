@@ -121,8 +121,9 @@ def lambda_handler(event, context):
 
     print(os.environ['BUCKET1'])
     print(os.environ['BUCKET2'])
+    #print(os.environ['testing'])
 
-    if os.environ['testing'] == 'True':
+    if os.environ.get('testing') == 'True':
         awsEvent.detail_type = "Successful. Ommiting further tasks since it's merely for unit testing"
         return Marshaller.marshall(awsEvent)
     #https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/s3.html#S3.Client.put_object

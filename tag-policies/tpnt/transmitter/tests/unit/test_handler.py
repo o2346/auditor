@@ -5,7 +5,7 @@ import pytest
 from schema.aws.s3.awsapicallviacloudtrail import AWSEvent
 from schema.aws.s3.awsapicallviacloudtrail import AWSAPICallViaCloudTrail
 from schema.aws.s3.awsapicallviacloudtrail import Marshaller
-from transmitter import app
+from function import app
 
 import os
 import sys
@@ -54,7 +54,7 @@ def test_lambda_handler(eventBridgeEvent, mocker):
 def test_filter_noncompliants(eventBridgeEvent, mocker):
 #    for p in sys.path:
 #        print(p)
-    csvpath = os.path.join(os.environ['src'],'transmitter','localmoc','report.csv')
+    csvpath = os.path.join(os.environ['src'],'function','localmoc','report.csv')
     print(csvpath)
     with open(csvpath, newline='') as csvfile:
         #https://docs.python.org/3/library/csv.html#reader-objects
