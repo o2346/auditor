@@ -3,7 +3,7 @@
   "text": ":warning: *Non-compliant resources* - Tag Policies Non-compliance Transmitter",
   "attachments": [ {
     "fallback": "",
-    "color": "#7B7D7D",
+    "color": "warning",
     "pretext": "Download a report below to review resources marked as non-compliant against Tag Policies defined by the organization's compliance team",
     "fields": [
       {
@@ -26,11 +26,11 @@
       },
       {
         "title": "Download instruction(CLI)",
-        "value": "`aws s3 cp s3://value.S3Bucket/value.S3Object $(dirname $(mktemp -u))/noncompliants.csv`"
+        "value": "```\nnoncompliantscsv=$(dirname $(mktemp -u))'/noncompliants.csv'; aws s3 cp s3://value.S3Bucket/value.S3Object ${noncompliantscsv} && cat ${noncompliantscsv}\n```"
       },
       {
         "title": "Download instruction(CLI) Note",
-        "value": "Make sure to obtain proper credential of Audit account(may refer to Compliance accunt) which owns the S3 bucket. Since the one was in charge of this, he is supposet be granted necessary permissions."
+        "value": "Make sure to obtain proper credential of the Audit account(also may known as Compliance account) which owns the S3 bucket in order to execute command."
       }
     ],
     "props": {
