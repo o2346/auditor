@@ -1,6 +1,7 @@
-# TPNT-Transmitter
+# tpnt-transmitter
 
-Fires when a Tag Polices report as csv was save on specified S3 bucket, Extract only Non-compliants and save as another csv, Sends warning to given Slack channel.
+Fires when a Tag Polices report as csv was saved on specified S3 bucket, Extract only lines with Non-compliants and save as another csv, Sends warning to given Slack channel.
+This is one of 2 major components of Tag Policies Non-compliance Transmitter.
 
 This project contains source code and supporting files for a serverless application that you can deploy with the SAM CLI. It includes the following files and folders.
 
@@ -18,6 +19,8 @@ To use the SAM CLI, you need the following tools.
 * SAM CLI - [Install the SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html)
 * [Python 3 installed](https://www.python.org/downloads/)
 * Docker - [Install Docker community edition](https://hub.docker.com/search/?type=edition&offering=community)
+
+To execute following commands, obtain credentials of your Compliance account.
 
 To build and deploy your application for the first time, run the following in your shell:
 
