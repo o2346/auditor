@@ -20,6 +20,11 @@
         "short": "true"
       },
       {
+        "title": "Remediation",
+        "value": "Associate tag with proper value",
+        "short": "true"
+      },
+      {
         "title": "Policy Type",
         "value": "<https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_tag-policies.html|Tag Policies> - AWS Organizations",
         "short": "true"
