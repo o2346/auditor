@@ -31,6 +31,10 @@
       {
         "title": "Download instruction(CLI) Note",
         "value": "Make sure to obtain proper credential of the Audit account(also may known as Compliance account) which owns the S3 bucket in order to execute command."
+      },
+      {
+        "title": "Via respective Management Console",
+        "value": "<https://console.aws.amazon.com/resource-groups/tag-policies/?region=ap-northeast-1#|Effective tag policy and noncompliants> (Make sure to Filter by proper Region)"
       }
     ],
     "props": {
