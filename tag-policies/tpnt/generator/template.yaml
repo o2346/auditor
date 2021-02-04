@@ -36,6 +36,13 @@ Resources:
         #https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-policy-template-list.html#s3-crud-policy
         - S3CrudPolicy:
             BucketName: !If [IsBucketDefalt, !Sub "tagpolicies-generated-reports-${AWS::AccountId}",!Ref Bucket]
+        #https://aws.amazon.com/premiumsupport/knowledge-center/lambda-sam-template-permissions/
+        - Statement:
+          - Sid: GenerateReport
+            Effect: Allow
+            Action:
+            - tag:StartReportCreation
+            Resource: '*'
       Events:
         PeriodicGenerateReport:
           #https://docs.aws.amazon.com/lambda/latest/dg/with-scheduledevents-example-use-app-spec.html
