@@ -2,9 +2,9 @@ version = 0.1
 [default]
 [default.deploy]
 [default.deploy.parameters]
-stack_name = "TagPoliciesNoncomplianceTransmitter"
-s3_prefix = "TagPoliciesNoncomplianceTransmitter"
+stack_name = "tpnt-generator"
+s3_prefix = "tpnt-generator"
 region = "us-east-1"
-confirm_changeset = true
+confirm_changeset = false
 capabilities = "CAPABILITY_IAM"
 parameter_overrides = "Bucket=\"Default\""
