@@ -12,6 +12,10 @@ Parameters:
     # By default, Manually create one with the name described in 'S3CrudPolicy' below, if you actually wanted to invoke the func and generate report into the bucket.
     # Be noticed this template assumes the bucket would already exists.
     # It is not responsible to create the bucket, but the other hand 'transmitter' could instead.
+  Schedule:
+    Type: String
+    #Default: 'rate(24 hours)'
+    Default: 'rate(1 minute)'
 
 #https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/conditions-sample-templates.html
 Conditions:
@@ -49,7 +53,7 @@ Resources:
           Type: Schedule
           Properties:
             #Schedule: rate(24 hours) #https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html#RateExpressions
-            Schedule: rate(1 minute)
+            Schedule: !Ref Schedule
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
