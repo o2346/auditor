@@ -29,7 +29,8 @@ Conditions:
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
-    Timeout: 3
+    Timeout: 240
+    MemorySize: 1024
     Environment: #https://github.com/aws/aws-sam-cli/issues/1163#issuecomment-514031539
       Variables:
         SENDTO: !Ref SendTo
@@ -61,7 +62,8 @@ Resources:
             Bucket:
               Ref: Bucket1
             Events:
-              - 's3:ObjectCreated:*'
+              - 's3:ObjectCreated:Put'
+                #https://docs.aws.amazon.com/AmazonS3/latest/dev/NotificationHowTo.html#supported-notification-event-types
   #https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-property-function-s3.html
   #https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3-bucket.html
   Bucket1:

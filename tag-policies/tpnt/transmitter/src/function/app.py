@@ -99,6 +99,14 @@ def lambda_handler(event, context):
     awsEvent:AWSEvent = Marshaller.unmarshall(event, AWSEvent)
     detail:AWSAPICallViaCloudTrail = awsEvent.detail
 
+    print(json.dumps(event))
+    if event['Records'][0]['eventName'] != 'ObjectCreated:Put':
+        aborttext = event['Records'][0]['eventName'] + " is non of concern to proceed. Abort"
+        awsEvent.detail_type = aborttext
+        print(aborttext)
+        return Marshaller.marshall(awsEvent)
+
+
     #Execute business logic
 
     #print(json.dumps(event))
