@@ -3,7 +3,7 @@
 <!--StackName:TagPoliciesNoncomplianceTransmitter-->
 ![tpnt.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/486518/399f5a57-6af1-88ff-ed96-902fc69ebc6b.png)
 
-Send message to slack channel when Non-compliant resources against tag policies was introduced
+Send message to slack channel when Non-compliant resources against tag policies were introduced
 
 ## Features
 
@@ -52,7 +52,7 @@ For more detailes, refer 'transmitter/README.md'
 
 ### Generator
 
-* Obtain credentials of your Organizations Mater account.
+* Obtain credentials of your Organizations Master account.
 * Obtain NAME_OF_BUCKET1 that would be provided as output from cloudformation in Transmitter's deployment.
 
 ```bash
