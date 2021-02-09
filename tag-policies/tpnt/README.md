@@ -1,9 +1,9 @@
 # Tag Policies Non-compliance Transmitter
 
 <!--StackName:TagPoliciesNoncomplianceTransmitter-->
-Send message to slack channel when Non-compliant resources against tag policies was introduced
+![tpnt.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/486518/399f5a57-6af1-88ff-ed96-902fc69ebc6b.png)
 
-![message_img]()
+Send message to slack channel when Non-compliant resources against tag policies was introduced
 
 ## Features
 
@@ -36,12 +36,12 @@ There are 2 separate components below with respective sam templates.
 
 ## Quick instruction for deployment
 
-assuming default region is us-east-1
+Assuming default region is us-east-1
 
 ### Transmitter
 
-obtain credentials of your Compliance account.
-obtain Slack webhook url of yours.
+Obtain credentials of your Compliance account
+Obtain Slack webhook url of yours
 
 ```bash
 cd transmitter
@@ -53,7 +53,7 @@ For more detailes, refer 'transmitter/README.md'
 ### Generator
 
 Obtain credentials of your Organizations Mater account.
-Obtain NAME_OF_BUCKET1 that would be provided as output from cloudformation of Transmitter's deployment.
+Obtain NAME_OF_BUCKET1 that would be provided as output from cloudformation in Transmitter's deployment.
 
 ```bash
 cd generator
@@ -62,6 +62,6 @@ sam build && sam deploy --resolve-s3 --parameter-overrides Bucket=[NAME_OF_BUCKE
 
 For more detailes, refer 'generator/README.md'
 
-On the completions of both 2 components above, You then should be recieving warning messages like image above, every 24 hours.
+On the completion of both 2 deployments above, You then should be recieving warning messages like image above, every 24 hours.
 
 If non of Non-compliants were present to be reported, meaning your entire organization was considered to be completely compliance against Tag Policies, No warning messages would be transmitted.
