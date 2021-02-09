@@ -14,8 +14,8 @@ Parameters:
     # It is not responsible to create the bucket, but the other hand 'transmitter' could instead.
   Schedule:
     Type: String
-    #Default: 'rate(24 hours)'
-    Default: 'rate(1 minute)'
+    Default: 'rate(24 hours)'
+    #Default: 'rate(1 minute)'
 
 #https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/conditions-sample-templates.html
 Conditions:
