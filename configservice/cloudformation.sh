@@ -9,8 +9,12 @@
 #delete-stack-set
 #delete-stack-instances
 
+#Original instruction
+#add-deployment-targets-to-stack-set
+
 
 cd `dirname $0`
+subcommand="$1"
 
 permission_model='SERVICE_MANAGED'
 auto_deployment_option='--auto-deployment Enabled=true,RetainStacksOnAccountRemoval=false'
@@ -30,7 +34,7 @@ while [[ $# -gt 0 ]]; do
     shift # past value
     ;;
     --deployment-targets)
-    readonly deployment_targets="$2" #"OrganizationalUnitIds=$ou"
+    deployment_targets="$2" #"OrganizationalUnitIds=$ou"
     shift # past argument
     shift # past value
     ;;
@@ -65,6 +69,16 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 set -- "${POSITIONAL[@]}" # restore positional parameters
+
+# Obtain current deployment targets
+readonly current_deployment_targets="$(
+  aws cloudformation  describe-stack-set                                \
+    --stack-set-name $stack_set_name                                    \
+    --query 'StackSet.OrganizationalUnitIds' \
+    --output text |
+  tr '\t' ','
+)"
+readonly current_regions="$(aws cloudformation list-stack-instances --stack-set-name $stack_set_name --query 'Summaries[].{Region:Region}' --output text | sort -u | tr '\n' ' ')"
 
 # enable stacksets on organizations beforhand according to below
 # https://docs.aws.amazon.com/organizations/latest/userguide/services-that-can-integrate-cloudformation.html
@@ -126,12 +140,13 @@ if [ "$1" = "trust-stack-set-administrator" ]; then
   exit $?
 fi
 
+
 if echo $1 | grep 'delete\-stack\-instances'; then
   aws cloudformation delete-stack-instances    \
     --stack-set-name $stack_set_name           \
-    --deployment-targets "$deployment_targets" \
+    --deployment-targets "OrganizationalUnitIds=$current_deployment_targets" \
     --no-retain-stacks                         \
-    --regions $regions
+    --regions $current_regions
   await_completion $stack_set_name
   exit 0
 fi
@@ -139,10 +154,9 @@ fi
 if echo $1 | grep 'delete\-stack\-set'; then
   aws cloudformation delete-stack-instances    \
     --stack-set-name $stack_set_name           \
-    --deployment-targets "$deployment_targets" \
+    --deployment-targets "OrganizationalUnitIds=$current_deployment_targets" \
     --no-retain-stacks                         \
-    --regions $regions
-
+    --regions $current_regions
   await_completion $stack_set_name
 
   aws cloudformation delete-stack-set \
@@ -151,7 +165,38 @@ if echo $1 | grep 'delete\-stack\-set'; then
   exit 0
 fi
 
-if [ "$1" = "create-stack-set" ] ; then
+if [ "$1" = 'add-deployment-targets-to-stack-set' ]; then
+
+  deployment_targets="$deployment_targets,$current_deployment_targets"
+  description="$(aws cloudformation describe-stack-set --stack-set-name $stack_set_name --query 'StackSet.Description' --output text)"
+  template_body="$(aws cloudformation describe-stack-set --stack-set-name $stack_set_name --query 'StackSet.TemplateBody' --output text)"
+  aws cloudformation validate-template --template-body "$template_body" || exit 1
+  permission_model="$(aws cloudformation describe-stack-set --stack-set-name $stack_set_name --query 'StackSet.PermissionModel' --output text)"
+  parameters="$(aws cloudformation describe-stack-set --stack-set-name $stack_set_name --query 'StackSet.Parameters')"
+  readonly subcommand='create-stack-set'
+  regions="$current_regions"
+
+  echo "$deployment_targets"
+  echo "$description"
+  echo "$template_body"
+  echo "$permission_model"
+  echo "$parameters"
+  echo $subcommand
+  echo "$regions"
+
+  aws cloudformation delete-stack-instances    \
+    --stack-set-name $stack_set_name           \
+    --deployment-targets "OrganizationalUnitIds=$current_deployment_targets" \
+    --no-retain-stacks                         \
+    --regions $current_regions
+  await_completion $stack_set_name
+
+  aws cloudformation delete-stack-set \
+    --stack-set-name $stack_set_name
+  await_completion $stack_set_name
+fi
+
+if [ "$subcommand" = "create-stack-set" ] ; then
   echo 'creating new one' >&2
   aws cloudformation create-stack-set                           \
     --stack-set-name $stack_set_name                            \
@@ -190,7 +235,7 @@ if echo "$1" | grep -E 'update' > /dev/null; then
     --operation-preferences $operation_pref    \
     --regions $regions
 
-elif echo "$1" | grep -E 'create' > /dev/null; then
+elif echo "$subcommand" | grep -E 'create' > /dev/null; then
   echo 'creating new stack-instances' >&2
   aws cloudformation create-stack-instances    \
     --stack-set-name $stack_set_name           \
