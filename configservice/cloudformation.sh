@@ -71,6 +71,7 @@ done
 set -- "${POSITIONAL[@]}" # restore positional parameters
 
 # Obtain current deployment targets
+echo 'Obtainig resent values' >&2
 readonly current_deployment_targets="$(
   aws cloudformation  describe-stack-set                                \
     --stack-set-name $stack_set_name                                    \
@@ -79,6 +80,7 @@ readonly current_deployment_targets="$(
   tr '\t' ','
 )"
 readonly current_regions="$(aws cloudformation list-stack-instances --stack-set-name $stack_set_name --query 'Summaries[].{Region:Region}' --output text | sort -u | tr '\n' ' ')"
+echo 'Just ignore error above if attempting to create new one' >&2
 
 # enable stacksets on organizations beforhand according to below
 # https://docs.aws.amazon.com/organizations/latest/userguide/services-that-can-integrate-cloudformation.html
@@ -256,7 +258,7 @@ fi
 #describe & list
 aws cloudformation describe-stack-set      \
   --stack-set-name $stack_set_name         \
-  --query 'StackSet.{Status:Status,StackSetARN:StackSetARN}'
+  --query 'StackSet.{Status:Status,StackSetARN:StackSetARN,OrganizationalUnitIds:OrganizationalUnitIds}'
 aws cloudformation list-stack-instances --stack-set-name $stack_set_name
 
 exit 0
