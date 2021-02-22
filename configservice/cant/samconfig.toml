@@ -2,8 +2,8 @@ version = 0.1
 [default]
 [default.deploy]
 [default.deploy.parameters]
-stack_name = "configservice-aggregated-violation-transmitter"
-s3_prefix = "configservice-aggregated-violation-transmitter"
+stack_name = "cant"
+s3_prefix = "cant"
 region = "us-east-1"
 confirm_changeset = true
 capabilities = "CAPABILITY_IAM"
