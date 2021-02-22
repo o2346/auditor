@@ -115,7 +115,7 @@ Unfortunately that is not tested neither well documented yet.
 To delete the sample application that you created, use the AWS CLI. Assuming you used your project name for the stack name, you can run the following:
 
 ```bash
-aws cloudformation delete-stack --stack-name STACK_NAME
+aws cloudformation delete-stack --stack-name `cat samconfig.toml | grep -E '^stack_name' | awk '{print $NF}' | tr -d '"'`
 ```
 
 > ## Resources
