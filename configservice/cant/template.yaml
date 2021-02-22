@@ -41,7 +41,8 @@ Resources:
         ScheduledEvent:
           Type: Schedule #https://github.com/aws/serverless-application-model/blob/master/versions/2016-10-31.md#example-schedule-event-source-object
           Properties:
-            Schedule: rate(6 hours) #https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html#RateExpressions
+            Schedule: rate(24 hours)
+            #Schedule: rate(6 hours) #https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html#RateExpressions
             #Schedule: rate(5 minutes)
             Name: my-schedule
             Description: Example schedule
