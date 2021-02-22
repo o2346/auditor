@@ -42,7 +42,7 @@ To build and deploy your application for the first time, run the following in yo
 
 ```bash
 sam build
-sam deploy --parameter-overrides SendTo=https://hooks.slack.com/services/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX --resolve-s3
+sam deploy --resolve-s3 --parameter-overrides SendTo=https://hooks.slack.com/services/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
 The first command will build the source of your application. The second command will package and deploy your application to AWS.
