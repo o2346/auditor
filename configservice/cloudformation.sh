@@ -71,7 +71,7 @@ done
 set -- "${POSITIONAL[@]}" # restore positional parameters
 
 # Obtain current deployment targets
-echo 'Obtainig resent values' >&2
+echo 'Obtainig recent values' >&2
 readonly current_deployment_targets="$(
   aws cloudformation  describe-stack-set                                \
     --stack-set-name $stack_set_name                                    \
