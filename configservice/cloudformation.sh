@@ -261,4 +261,8 @@ aws cloudformation describe-stack-set      \
   --query 'StackSet.{Status:Status,StackSetARN:StackSetARN,OrganizationalUnitIds:OrganizationalUnitIds}'
 aws cloudformation list-stack-instances --stack-set-name $stack_set_name
 
+if [ "$1" = 'delete-stack-set' ]; then
+  echo "If error says $stack_set_name not found, affirmative. Since that is exactly what you expect. Dismissed."
+fi
+
 exit 0
