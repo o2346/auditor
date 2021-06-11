@@ -43,7 +43,7 @@ def get_dictdata(event):
         #in case of production
         #https://stackoverflow.com/questions/42312196/how-do-i-read-a-csv-stored-in-s3-with-csv-dictreader
         #https://docs.aws.amazon.com/lambda/latest/dg/with-s3-example-deployment-pkg.html#with-s3-example-deployment-pkg-python
-        key = urllib.parse.unquote_plus(event['Records'][0]['s3']['object']['key'])
+        key = urllib.parse.unquote_plus(event['Records'][0]['s3']['object']['key'].replace("%3A", ":"))
         try:
             response = s3.get_object(Bucket=parent, Key=key)
             # for python 3 you need to decode the incoming bytes:
@@ -52,7 +52,7 @@ def get_dictdata(event):
             ret = [dict(d) for d in reader]
         except Exception as e:
             print(e)
-            print('Error getting object {} from bucket {}. Make sure they exist and your bucket is in the same region as this function.'.format(key, bucket))
+            print('Error getting object {} from bucket {}. Make sure they exist and your bucket is in the same region as this function.'.format(key, parent))
             raise e
     return ret
 
