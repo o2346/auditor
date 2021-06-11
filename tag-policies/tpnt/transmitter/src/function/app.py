@@ -90,7 +90,7 @@ def lambda_handler(event, context):
     #Execute business logic
 
     noncompliantsCount = len(filter_noncompliants(get_dictdata(event)))
-    print(noncompliantsCount)
+    print('noncompliantsCount=' + noncompliantsCount)
 
     if noncompliantsCount == 0:
         #Make updates to event payload, if desired
