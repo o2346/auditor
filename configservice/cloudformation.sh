@@ -92,15 +92,18 @@ function get_stackset_status() {
     --query 'StackSet.Status'
 }
 
-function does_stack_exists() {
-  :
+# https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/
+exponential_backoff() {
+  seq $1                                                                     |
+  awk '{cap=64;expo=2^$1;(cap<expo)?await=cap:await=expo;print await}'       |
+  xargs -I{} bash -c 'printf "%s\n" {0..{}} | sort --random-sort | head -n 1'
 }
 
 function await_completion() {
   local statusis=`mktemp`
   trap "[ -f $statusis ] && rm $statusis" ERR EXIT
-  seq 0 10 | xargs -I{} echo "2^{}-1" | bc | while read standby; do
-    sleep "`shuf -i 0-$standby -n 1`" #https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/
+  exponential_backoff 36 | while read standby; do
+    sleep "$standby"
 
     aws cloudformation list-stack-set-operations --stack-set-name $1 \
       --query 'Summaries[?Status==`RUNNING`]' \
